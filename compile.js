@@ -58,7 +58,6 @@ const compile = (
     intermediateDir = fs.mkdtempSync(Path.join(os.tmpdir(), "referenza-intermediate-"));
   }
   if (clean) {
-    console.warn(`====================== CLEAN COMPILE ======================`);
     fs.writeFileSync(statePath, "{}");
     fs.removeSync(outputDir);
   }
@@ -67,6 +66,10 @@ const compile = (
   if (!sourceDir || !fs.lstatSync(sourceDir).isDirectory()) {
     throw new TypeError(`Invalid source directory "${sourceDir}"`);
   }
+  // Normalise directory paths and ensure trailing slash
+  sourceDir = Path.normalize(sourceDir) + Path.sep;
+  intermediateDir = Path.normalize(intermediateDir) + Path.sep;
+  outputDir = Path.normalize(outputDir) + Path.sep;
 
   if (urlPathPrefix) {
     if (!/^\//.test(urlPathPrefix)) {

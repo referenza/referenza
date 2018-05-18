@@ -9,6 +9,7 @@
   "files": [
     "src/**",
     "compiling/**",
+    "cli/**",
     "referenza.js",
     "serve.js",
     "compile.js"
