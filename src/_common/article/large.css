@@ -1,0 +1,9 @@
+#article {
+  max-width: 60rem;
+}
+
+#article dd /* Definition value */
+{
+  margin-left: 1.25rem;
+  margin-right: 1.25rem;
+}

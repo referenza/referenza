@@ -1,0 +1,88 @@
+#header {
+  background: #101e26;
+
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+
+  height: 5rem; /* Fixed height so that menu popup is accurate */
+}
+
+#header > * {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#header-logo {
+  font-weight: 600;
+}
+
+#header-project {
+  white-space: nowrap;
+
+  overflow: auto;
+}
+
+.header-project-link,
+.header-project-menu-container {
+  background: black;
+}
+
+.header-project-link {
+  color: #FDF6E3;
+
+  display: inline-block;
+  vertical-align: middle;
+  font-weight: 600;
+}
+
+.header-project-link::after {
+  content: '▼';
+  margin-left: 0.25rem;
+}
+
+.header-project-menu-container {
+  position: fixed;
+
+  display: none;
+
+  white-space: normal; /* Undo ancestor styling */
+}
+
+.header-project-menu-container:target {
+  display: block;
+}
+
+.header-project-menu-heading,
+.header-project-menu-entry-link,
+.header-project-menu:empty::before {
+  display: block;
+  padding: 0 1rem;
+}
+
+.header-project-menu-close-link {
+  display: block;
+  color: gray;
+}
+
+.header-project-menu-title {
+  font-weight: 600;
+}
+
+.header-project-menu {
+  padding: 0;
+  margin: 0;
+}
+
+.header-project-menu:empty::before {
+  content: "Nothing to see here...";
+}
+
+.header-project-menu-entry {
+  display: block;
+  font-weight: 600;
+}
+
+#header-controls {
+  text-align: right;
+}

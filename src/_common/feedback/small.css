@@ -1,0 +1,14 @@
+#feedback {
+  position: fixed;
+
+  height: 100%;
+  width: 100%;
+}
+
+#feedback-form > * {
+  margin: 1.5rem 1rem;
+}
+
+#feedback-close {
+  margin-bottom: 0.25rem;
+}

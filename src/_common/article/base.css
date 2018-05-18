@@ -1,0 +1,201 @@
+#article section:not(:last-of-type) {
+  margin-bottom: 4rem;
+}
+
+#article header {
+  background: #073642;
+  color: white;
+
+  padding: 1.5rem 1.25rem;
+}
+
+#article .category {
+  display: none;
+
+  margin-bottom: 0.5rem;
+
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+#article .category-label {
+  /* For reader mode */
+  font-size: 0;
+}
+
+#article h1, h2, h3 {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+#article h2, h3 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+#article > section > :not(h2):not(h3) {
+  margin-left: 1.25rem !important;
+  margin-right: 1.25rem !important;
+}
+
+#article h1 {
+  font-size: 2.25rem;
+
+  /* Don't reduce too much, as otherwise multiple lines get cramped */
+  line-height: 1.25;
+}
+
+#article h2 {
+  background: #586E75;
+
+  font-size: 1.25rem;
+
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+}
+
+#article h3 {
+  background: #93A1A1;
+
+  font-size: 1rem;
+
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+#article .table-container {
+  overflow: auto;
+}
+
+#article table {
+  border-collapse: collapse;
+  min-width: 100%;
+}
+
+#article td, #article th {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+#article th {
+  text-align: left;
+  color: #859900;
+}
+
+#article td td, #article td th {
+  padding: 0.25rem 0.75rem;
+}
+
+#article td thead th {
+  font-size: 0.875rem;
+}
+
+#article ul, /* List */
+#article ol  /* List */
+{
+  padding-left: 1.5rem;
+}
+
+#article p, /* Paragraph */
+#article pre, /* Block of code */
+#article dl, /* Definition list */
+#article ul, /* List (ordered) */
+#article ol, /* List (unordered) */
+#article .table-container /* Table */
+{
+  margin: 1.25rem 0; /* Left and right are 1.25rem, so match */
+}
+
+#article dt, /* Definition title */
+#article dd, /* Definition value */
+#article dd dl, /* Definition list inside definition list */
+#article li, /* List item */
+#article li ul, /* List inside list */
+#article li ol /* List inside list */
+{
+  margin: 0.5rem 0;
+}
+
+#article td ul, /* List inside table */
+#article td ol /* List inside table */
+{
+  margin: 0;
+}
+
+#article dt /* Definition title */
+{
+  font-weight: 600;
+}
+
+#article pre, /* Block of code */
+#article code /* Inline code */
+{
+  font-size: 0.8125rem;
+}
+
+#article pre /* Block of code */
+{
+  background: rgba(255, 255, 255, 0.03);
+
+  color: #777;
+
+  display: block;
+  overflow: auto;
+
+  padding: 0.75rem;
+}
+
+#article pre.signature {
+  background: #282c34;
+  border: 1px solid #181a1f;
+  color: #abb2bf;
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+
+#article pre .type { /* .type exists in x-referenza-typedline code */
+  color: #1a1a1a;
+}
+
+#article pre .literal { /* .literal exists in x-referenza-typedline code */
+  color: #d19a66;
+}
+
+#article pre.signature .type {
+  color: #98c379;
+}
+
+#article pre.signature .literal {
+  color: #61aeee;
+}
+
+#article code /* Inline code */
+{
+  color: #EEE8D5;
+  padding: 0.1875rem 0.4375rem;
+}
+
+#article a code /* Inline code in link */
+{
+  color: inherit;
+}
+
+.article-nav {
+  display: table;
+  width: 100%;
+
+  font-weight: 600;
+
+  padding: 0 1.25rem;
+  font-size: 0.875rem;
+  margin: 1.5rem 0;
+}
+
+.article-nav > div {
+  display: table-cell;
+}
+
+.article-nav-right {
+  text-align: right;
+}

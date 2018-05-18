@@ -1,0 +1,43 @@
+{
+  "name": "referenza",
+  "version": "0.0.1",
+  "description": "Create static HTML project documentation using Markdown",
+  "bin": {
+    "referenza": "referenza.js"
+  },
+  "main": "referenza.js",
+  "files": [
+    "src/**",
+    "compiling/**",
+    "referenza.js",
+    "serve.js",
+    "compile.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wilsonzlin/referenza.git"
+  },
+  "keywords": [
+    "referenza",
+    "documentation",
+    "docs",
+    "markdown",
+    "md"
+  ],
+  "author": "Wilson Lin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wilsonzlin/referenza/issues"
+  },
+  "homepage": "https://github.com/wilsonzlin/referenza#readme",
+  "dependencies": {
+    "command-line-args": "^5.0.2",
+    "command-line-usage": "^5.0.5",
+    "compression": "1.x",
+    "express": "4.x",
+    "fs-extra": "4.x",
+    "highlight.js": "9.x",
+    "marked": "0.3.x",
+    "zcompile": "4.x"
+  }
+}
