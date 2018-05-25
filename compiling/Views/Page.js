@@ -2,7 +2,7 @@
 
 const escapeHTML = require("../Utils/escapeHTML");
 
-const Page = ({url, urlPathPrefix, feedbackUrl, appTitle, viewportTitle, activeProject, tocCategoriesHtml, articleHtml}) => {
+const Page = ({url, urlPathPrefix, feedbackUrl, logo, viewportTitle, activeProject, tocCategoriesHtml, articleHtml}) => {
   return `
     <!DOCTYPE html>
     <html lang="en-gb">
@@ -103,7 +103,7 @@ const Page = ({url, urlPathPrefix, feedbackUrl, appTitle, viewportTitle, activeP
       </div>
 
       <header id="header" class="no-select">
-        <span id="header-logo">${escapeHTML(appTitle)}</span>
+        <span id="header-logo">${escapeHTML(logo)}</span>
         ${activeProject}
 
         <div id="header-controls">

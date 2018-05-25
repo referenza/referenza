@@ -1,6 +1,5 @@
 #header-logo {
-  width: 4.5rem;
-  padding-left: 1rem;
+  padding: 0 1rem;
   font-size: 2rem;
 }
 
@@ -33,6 +32,5 @@
 
 #header-controls {
   font-size: 0.875rem;
-  padding-right: 1rem;
-  width: 5.5rem;
+  padding: 0 1rem;
 }

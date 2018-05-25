@@ -25,6 +25,9 @@
   /* For close link */
   position: relative;
 
+  /* Needed to keep above .tabbed-sections in FF */
+  z-index: 1;
+
   background: #27343b;
   box-shadow: 0.25rem 0.25rem 1rem black;
 }

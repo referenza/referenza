@@ -1,50 +1,98 @@
 "use strict";
 
 const marked = require("marked");
-const hljs = require("highlight.js");
-const parseTypedCodeLine = require("./parseTypedCodeLine");
+const parseCode = require("./parseCode");
 const escapeHTML = require("./escapeHTML");
+const cryptoRandomHex = require("./cryptoRandomHex");
 
 const parseMarkdown = (mdText, removeParagraphTags, internalLinkCallback) => {
   let renderer = new marked.Renderer();
 
+  let currentTabbedSectionLabels;
+  let currentTabbedSectionsID;
+
   renderer.code = (code, language) => {
-    let html;
+    return parseCode(code, language);
+  };
 
-    if (language && language.indexOf("x-referenza-") == 0) {
-      switch (language.slice(8)) {
-      case "typedline":
-        html = parseTypedCodeLine(code);
-        break;
+  renderer.html = html => {
+    let html_comment_directive = /^\s*<!--\s*(start|end)\s+([a-zA-Z0-9-_\s]+)-->\s*$/.exec(html);
+    if (html_comment_directive) {
+      let start = html_comment_directive[1] == "start";
+      let dir = html_comment_directive[2].trim();
+
+      if (dir == "tabbed sections") {
+        if (start) {
+          currentTabbedSectionsID = cryptoRandomHex();
+          currentTabbedSectionLabels = [];
+          return `
+            <div class="tabbed-sections">
+              <div class="tabbed-sections-content">
+          `;
+
+        } else {
+          let compiled = `
+                </div>
+              </div>
+            </div>
+            <ul class="tabbed-sections-labels">
+              ${currentTabbedSectionLabels.map(l => `<li>${l}</li>`).join("")}
+            </ul>
+          </div>
+          `;
+          currentTabbedSectionsID = currentTabbedSectionLabels = undefined;
+          return compiled;
+        }
+
+      } else {
+        throw new TypeError(`Unknown referenza HTML comment directive "${dir}"`);
       }
-    } else if (language) {
-      html = hljs.highlight(language, code, true).value;
-    } else {
-      html = escapeHTML(code);
-    }
 
-    return `<pre>${html}</pre>`;
+    } else {
+      return html;
+    }
   };
 
   renderer.heading = (text, level) => {
-    let ret = marked(text).slice(3, -5); // Remove <p> wrapping
-    ret = ret;
-    let tag = `h${level + 1}`; // The only <h1> should be the article's title
-    return `<${tag}>${ret}</${tag}>`;
+    let content = marked(text).slice(3, -5); // Remove <p> wrapping
+
+    if (currentTabbedSectionsID && level == 1) {
+      // End last tabbed section and start new one
+      let currentTabbedSectionsCount = currentTabbedSectionLabels.length;
+      let radioID = "tabbed-section-radio-" + cryptoRandomHex();
+      let generated = `
+        ${ currentTabbedSectionsCount ? "</div></div>" : "" }
+        <div class="tabbed-section">
+          <input id="${radioID}" class="tabbed-section-radio"
+            name="${currentTabbedSectionsID}" type="radio"
+            ${ currentTabbedSectionsCount ? "" : "checked" }>
+          <div class="tabbed-section-content">
+      `;
+      currentTabbedSectionLabels.push(`
+        <label class="tabbed-section-label ${ currentTabbedSectionsCount ?
+        "" :
+        "active" }" for="${radioID}">${escapeHTML(content)}</label>
+      `);
+      return generated;
+
+    } else {
+      let tag = `h${level + 1}`; // The only <h1> should be the article's title
+      return `<${tag}>${content}</${tag}>`;
+    }
   };
 
   renderer.paragraph = text => {
-    let ret = marked(text);
+    let content = marked(text);
     if (removeParagraphTags) {
-      ret = ret.slice(3, -5); // Remove <p> wrapping
+      content = content.slice(3, -5); // Remove <p> wrapping
     }
-    return ret;
+    return content;
   };
 
   renderer.list = (body, ordered) => {
-    let ret = marked(body);
+    let content = marked(body);
     let tagName = ordered ? "ol" : "ul";
-    return `<${tagName}>${ret}</${tagName}>`;
+    return `<${tagName}>${content}</${tagName}>`;
   };
 
   renderer.link = (href, title, text) => {

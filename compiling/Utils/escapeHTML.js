@@ -1,14 +1,9 @@
 "use strict";
 
+const HTMLEntities = require("html-entities").AllHtmlEntities;
+
 const escapeHTML = str => {
-  let entityMap = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    "\"": "&quot;",
-    "'": "&#39;",
-  };
-  return ("" + str).replace(/[&<>"']/g, entity => entityMap[entity]);
+  return new HTMLEntities().encode(str);
 };
 
 module.exports = escapeHTML;

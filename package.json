@@ -38,6 +38,7 @@
     "express": "4.x",
     "fs-extra": "4.x",
     "highlight.js": "9.x",
+    "html-entities": "^1.2.1",
     "marked": "0.3.x",
     "zcompile": "4.x"
   }

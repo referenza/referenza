@@ -38,6 +38,13 @@ module.exports = {
       description: "[Default `__metadata__.js`] File name of metadata files."
     },
     {
+      alias: "l",
+      name: "logo",
+      type: String,
+      typeLabel: "{underline name}",
+      description: "What to show at the top of every page."
+    },
+    {
       alias: "f",
       name: "feedback",
       type: String,
@@ -69,6 +76,7 @@ module.exports = {
       outputDir: args.output,
       statePath: args.state,
       metadataFileName: args.metadata,
+      logo: args.logo,
       feedbackUrl: args.feedback,
       projectNames: args.projects,
       urlPathPrefix: args.prefix,

@@ -3,7 +3,6 @@
 
   display: table;
   width: 100%;
-  table-layout: fixed;
 
   height: 5rem; /* Fixed height so that menu popup is accurate */
 }
@@ -15,6 +14,7 @@
 
 #header-logo {
   font-weight: 600;
+  width: 1px;
 }
 
 #header-project {
@@ -43,6 +43,9 @@
 
 .header-project-menu-container {
   position: fixed;
+
+  /* Needed to keep above .tabbed-sections in FF */
+  z-index: 1;
 
   display: none;
 
@@ -85,4 +88,5 @@
 
 #header-controls {
   text-align: right;
+  width: 1px;
 }

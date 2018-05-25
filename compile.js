@@ -43,6 +43,7 @@ const compile = (
 
     metadataFileName,
 
+    logo,
     feedbackUrl,
 
     projectNames,
@@ -226,7 +227,9 @@ const compile = (
 
             let pageHtml = Page({
               url: urlPathPrefix + article.urlDirPath,
+              urlPathPrefix: urlPathPrefix,
               feedbackUrl: feedbackUrl,
+              logo: logo,
               viewportTitle: `${article.name} | ${projectName} Documentation`,
               activeProject: activeProject,
               tocCategoriesHtml: tocCategoriesHtml,
