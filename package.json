@@ -3,16 +3,14 @@
   "version": "0.0.3",
   "description": "Create static HTML project documentation using Markdown",
   "bin": {
-    "referenza": "referenza.js"
+    "referenza": "bin/referenza"
   },
-  "main": "referenza.js",
+  "main": "bin/referenza",
   "files": [
-    "src/**",
-    "compiling/**",
-    "cli/**",
-    "referenza.js",
-    "serve.js",
-    "compile.js"
+    "bin/**",
+    "dist/**",
+    "res/**",
+    "cli/**"
   ],
   "repository": {
     "type": "git",
@@ -40,6 +38,12 @@
     "highlight.js": "9.x",
     "html-entities": "^1.2.1",
     "marked": "0.3.x",
+    "mermaid": "^8.0.0-rc.8",
+    "puppeteer": "^1.4.0",
     "zcompile": "4.x"
+  },
+  "devDependencies": {
+    "@types/html-entities": "^1.2.16",
+    "@types/node": "^10.3.2"
   }
 }

@@ -1,4 +1,4 @@
-const compile = require("../compile");
+const compile = require("../src/Compilation/compile");
 
 module.exports = {
   options: [
@@ -69,7 +69,7 @@ module.exports = {
     },
   ],
   action: args => {
-    compile({
+    return compile({
       clean: args.clean,
       sourceDir: args.source,
       intermediateDir: args.intermediate,
