@@ -6,7 +6,7 @@ const commandLineArgs = require("command-line-args");
 const commandLineUsage = require("command-line-usage");
 
 const compile = require("../src/Compilation/compile");
-const serve = require("../src/Server/serve");
+const serve = require("../src/main/ts/Server/serve");
 
 let packageInfo = require(__dirname + "/../package.json");
 

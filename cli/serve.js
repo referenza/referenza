@@ -1,4 +1,4 @@
-const serve = require("../src/Server/serve");
+const serve = require("../src/main/ts/Server/serve");
 
 module.exports = {
   options: [
