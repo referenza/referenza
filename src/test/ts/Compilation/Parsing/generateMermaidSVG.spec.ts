@@ -1,9 +1,7 @@
-import chai from "chai";
+import chai, {expect} from "chai";
 import "mocha";
 import {generateMermaidSVG} from "../../../../main/ts/Compilation/Parsing/generateMermaidSVG";
 import chaiAsPromised = require("chai-as-promised");
-
-const {expect} = chai;
 
 chai.use(chaiAsPromised);
 

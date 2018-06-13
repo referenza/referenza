@@ -1,14 +1,16 @@
-import puppeteer from "puppeteer";
+import puppeteer, {Browser} from "puppeteer";
 import {Page} from "puppeteer";
 
 export function generateMermaidSVG (code: string): Promise<string> {
   return new Promise((resolve, reject) => {
+    let browser: Browser;
     let page: Page;
     // HACK: Avoid TypeScript's complaints
     let window: any;
 
     puppeteer.launch()
-      .then(browser => {
+      .then(_browser => {
+        browser = _browser;
         return browser.newPage();
       })
       .then(p => {
@@ -29,6 +31,9 @@ export function generateMermaidSVG (code: string): Promise<string> {
       .then(svg => {
         resolve(svg);
       })
-      .catch(reject);
+      .catch(reject)
+      .then(() => {
+        return browser.close();
+      });
   });
 }
