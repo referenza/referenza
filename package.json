@@ -10,9 +10,10 @@
     "dist/**"
   ],
   "scripts": {
-    "build": "tsc && chmod +x dist/main/ts/main.js && cp -r src/main/resources dist/main/.",
+    "build": "npm run clean && tsc && chmod +x dist/main/ts/main.js && cp -r src/main/resources dist/main/.",
     "test": "mocha -r ts-node/register src/test/**/*.spec.ts",
-    "prepublish": "npm run test && npm run build"
+    "prepublish": "npm run test && npm run build",
+    "clean": "rm -rf dist"
   },
   "repository": {
     "type": "git",
