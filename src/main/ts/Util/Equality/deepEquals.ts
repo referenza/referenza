@@ -1,4 +1,4 @@
-export function deepEquals(a: any, b: any): boolean {
+export function deepEquals (a: any, b: any): boolean {
   let typeof_a = typeof a;
   let typeof_b = typeof b;
 

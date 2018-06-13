@@ -1,6 +1,6 @@
 import * as fs from "fs";
-import * as express from "express";
-import * as compression from "compression";
+import express from "express";
+import compression from "compression";
 
 export interface serveArgs {
   port?: number;
@@ -33,7 +33,7 @@ export function serve (
   server.use(urlPathPrefix, express.static(outputDir));
 
   if (!/^\/+$/.test(urlPathPrefix)) {
-    server.get("/", (req, res) => {
+    server.get("/", (_, res) => {
       res.redirect(urlPathPrefix + "/");
     });
   }

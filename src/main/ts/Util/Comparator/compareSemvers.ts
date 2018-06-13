@@ -1,4 +1,4 @@
-import {Semver} from "../../Compilation/Version/Semver";
+import {Semver} from "../Version/Semver";
 import {compareNatively} from "./compareNatively";
 
 export function compareSemvers (a: Semver, b: Semver): number {

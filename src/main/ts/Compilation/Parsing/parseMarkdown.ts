@@ -1,20 +1,20 @@
 import {cryptoRandomHex} from "../../Util/Random/cryptoRandomHex";
 import {parseCode} from "./parseCode";
-import * as marked from "marked";
-import {Anchor} from "../HTML/Anchor";
-import {Input} from "../HTML/Input";
-import {Label} from "../HTML/Label";
+import marked from "marked";
+import {A} from "../HTML/A";
+import {INPUT} from "../HTML/INPUT";
+import {LABEL} from "../HTML/LABEL";
 import {generateAsyncContentPlaceholder} from "./asyncContentPlaceholder";
-import {Heading} from "../HTML/Heading";
+import {H} from "../HTML/H";
 
-export function parseMarkdown (mdText: string, removeParagraphTags: boolean, internalLinkCallback: (string) => string): Promise<string> {
+export function parseMarkdown (mdText: string, removeParagraphTags: boolean, internalLinkCallback: (hash: string) => string): Promise<string> {
   return new Promise((resolve, reject) => {
     let renderer = new marked.Renderer();
 
-    let asyncContent = [];
+    let asyncContent: Array<[string, Promise<string>]> = [];
 
-    let currentTabbedSectionLabels;
-    let currentTabbedSectionsID;
+    let currentTabbedSectionLabels: Array<string> | undefined;
+    let currentTabbedSectionsID : string | undefined;
 
     renderer.code = (code: string, language: string) => {
       let async_id = cryptoRandomHex(32);
@@ -43,7 +43,7 @@ export function parseMarkdown (mdText: string, removeParagraphTags: boolean, int
                 </div>
               </div>
               <ul class="tabbed-sections-labels">
-                ${currentTabbedSectionLabels.map(l => `<li>${l}</li>`).join("")}
+                ${currentTabbedSectionLabels!.map(l => `<li>${l}</li>`).join("")}
               </ul>
             </div>
             `;
@@ -65,12 +65,12 @@ export function parseMarkdown (mdText: string, removeParagraphTags: boolean, int
 
       if (currentTabbedSectionsID && level == 1) {
         // End last tabbed section and start new one
-        let currentTabbedSectionsCount = currentTabbedSectionLabels.length;
+        let currentTabbedSectionsCount = currentTabbedSectionLabels!.length;
         let radioID = "tabbed-section-radio-" + cryptoRandomHex();
 
         let generated = (currentTabbedSectionsCount ? "</div></div>" : "") +
           `<div class="tabbed-section">` +
-          Input({
+          INPUT({
             ID: radioID,
             classes: ["tabbed-section-radio"],
             name: currentTabbedSectionsID,
@@ -79,7 +79,7 @@ export function parseMarkdown (mdText: string, removeParagraphTags: boolean, int
           }) +
           `<div class="tabbed-section-content">`;
 
-        currentTabbedSectionLabels.push(Label({
+        currentTabbedSectionLabels!.push(LABEL({
           classes: ["tabbed-section-label", currentTabbedSectionsCount ? "" : "active"],
           forID: radioID,
           content: content,
@@ -88,7 +88,7 @@ export function parseMarkdown (mdText: string, removeParagraphTags: boolean, int
         return generated;
 
       } else {
-        return Heading({
+        return H({
           level: level + 1, // The only <h1> should be the article's title
           content: content,
         });
@@ -97,7 +97,7 @@ export function parseMarkdown (mdText: string, removeParagraphTags: boolean, int
 
     renderer.paragraph = (content: string) => {
       if (!removeParagraphTags) {
-        content = `<p>content</p>`;
+        content = `<p>${content}</p>`;
       }
       return content;
     };
@@ -118,7 +118,7 @@ export function parseMarkdown (mdText: string, removeParagraphTags: boolean, int
         url = internalLinkCallback(href.slice(1));
       }
 
-      return Anchor({
+      return A({
         // No need to escape content, as it already is by renderer
         content: {HTML: content},
         URL: url,

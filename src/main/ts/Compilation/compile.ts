@@ -1,19 +1,34 @@
-import {CompileSettings} from "./Configuration/CompileSettings";
+import {CompilerSettings} from "./Configuration/CompilerSettings";
 import * as fs from "fs-extra";
 import {createTempDir} from "../Util/FS/createTempDir";
 import {isDirectory} from "../Util/FS/isDirectory";
 import {normaliseDirPath} from "../Util/FS/normaliseDirPath";
-import {compareSemvers} from "../Util/Comparator/compareSemvers";
 import {createURLPathComponent} from "../Util/URL/createURLPathComponent";
 import {createRedirectHTML} from "../Util/URL/createRedirectHTML";
-import {ArticleType} from "./Model/ArticleType";
-import {ArticleNavigator} from "./View/ArticleNavigator";
-import {ReferenceArticle} from "./View/ReferenceArticle";
+import {MArticleType} from "./Model/Article/MArticle";
+import {VArticleNavigator, VArticleNavigatorDirection} from "./View/Article/VArticleNavigator";
+import {VReferenceArticle} from "./View/Article/ReferenceArticle/VReferenceArticle";
 import {StateSession} from "./State/StateSession";
-import {loadProject} from "./Enumeration/loadProject";
-import {HeaderActiveProject} from "./View/HeaderActiveProject";
-import {HeaderProjectMenuEntry} from "./View/HeaderProjectMenuEntry";
-import {Article} from "./Model/Article";
+import {loadProject} from "./Enumeration/0/loadProject";
+import {VHeaderProject} from "./View/Header/VHeaderProject";
+import {VHeaderProjectMenuEntry} from "./View/Header/VHeaderProjectMenuEntry";
+import {parseTypedCodeLine} from "./Parsing/parseTypedCodeLine";
+import {parseMarkdown} from "./Parsing/parseMarkdown";
+import {VReferenceArticleSignature} from "./View/Article/ReferenceArticle/VReferenceArticleSignature";
+import {VReferenceArticleArgument} from "./View/Article/ReferenceArticle/VReferenceArticleArgument";
+import {VReferenceArticleReturn} from "./View/Article/ReferenceArticle/VReferenceArticleReturn";
+import {VPage} from "./View/Page/VPage";
+import {VContentArticle} from "./View/Article/ContentArticle/VContentArticle";
+import {VPaneTocCategory} from "./View/Pane/VPaneTocCategory";
+import {VPaneTocCategoryEntry} from "./View/Pane/VPaneTocCategoryEntry";
+import {MReferenceArticle} from "./Model/Article/ReferenceArticle/MReferenceArticle";
+import {MContentArticle} from "./Model/Article/ContentArticle/MContentArticle";
+import {VArticleHeader} from "./View/Article/VArticleHeader";
+import {VArticleFooter} from "./View/Article/VArticleFooter";
+import {VFormFeedback} from "./View/Feedback/VFormFeedback";
+import {createBlankStateFileContents} from "./State/StateFile";
+
+const zcompile = require("zcompile");
 
 export async function compile (
   {
@@ -27,13 +42,13 @@ export async function compile (
 
     metadataFileName = "__metadata__.js",
 
-    logo,
+    logo = "",
     feedbackUrl,
 
     projectNames,
 
     urlPathPrefix = "/",
-  }: CompileSettings
+  }: CompilerSettings
 ) {
   // Ensure clean intermediate directory
   // WARNING: Don't erase output directory if not clean, otherwise state is lost
@@ -44,7 +59,7 @@ export async function compile (
   }
 
   if (clean) {
-    fs.writeFileSync(statePath, "{}");
+    fs.writeFileSync(statePath, createBlankStateFileContents());
     fs.removeSync(outputDir);
   }
 
@@ -67,34 +82,36 @@ export async function compile (
     let stateSession = new StateSession(statePath);
 
     try {
-      let versions = loadProject({sourceDir, projectName, stateSession, metadataFileName});
+      let versions = await loadProject({sourceDir, projectName, stateSession, metadataFileName});
       let latestVersionDoc = versions[versions.length - 1];
 
-      // Redirect from "/project" to "/project/latestVersion"
+      // Redirect from "/project" to "/project/latestVersion/"
       redirects.push({
         from: "/" + createURLPathComponent(projectName),
-        to: latestVersionDoc.urlDirPath,
+        to: latestVersionDoc.createURLPath(),
       });
 
       for (let doc of versions) {
-        let activeProject = new HeaderActiveProject(
-          doc.name,
-          projectNames.filter(pn => doc.name !== pn).map(pn => new HeaderProjectMenuEntry(
-            urlPathPrefix + "/" + createURLPathComponent(pn) + "/",
-            pn,
-          )),
-          `${latestVersionDoc.version}`,
-          versions.filter(v => v.version !== doc.version).map(v => new HeaderProjectMenuEntry(
-            v.urlDirPath,
-            `${v.version}`,
-          )),
-        );
+        let activeProject = new VHeaderProject({
+          name: doc.name,
+          otherProjects: projectNames.filter(pn => doc.name != pn).map(pn => new VHeaderProjectMenuEntry({
+            URL: urlPathPrefix + "/" + createURLPathComponent(pn) + "/",
+            name: pn,
+          })),
+          activeVersion: `${latestVersionDoc.version}`,
+          otherVersions: versions.filter(v => v.version !== doc.version).map(v => new VHeaderProjectMenuEntry({
+            URL: v.createURLPath(),
+            name: `${v.version}`,
+          })),
+        });
 
         // Called when a link in a documentation is an internal one
-        let internalLinkCallback = id => {
-          for (let article of doc.articles) {
-            if (article.name === id) {
-              return urlPathPrefix + article.urlDirPath;
+        let internalLinkCallback = (id: string) => {
+          for (let articles of doc.articles.values()) {
+            for (let article of articles) {
+              if (article.name === id) {
+                return urlPathPrefix + article.createURLPath(doc);
+              }
             }
           }
 
@@ -103,108 +120,133 @@ export async function compile (
 
         let landingArticle = doc.getLandingArticle();
 
-        // Add redirect from "/project/version" to "/project/version/firstCategory/firstCategoryArticle"
+        // Add redirect from "/project/version/" to "/project/version/firstCategory/firstCategoryArticle/"
         redirects.push({
-          from: doc.urlDirPath,
-          to: landingArticle.urlDirPath,
+          from: doc.createURLPath(),
+          to: landingArticle.createURLPath(doc),
         });
 
-        for (let articleIdx = 0; articleIdx < doc.articles.length; articleIdx++) {
-          let prevArticle = articleIdx == 0 ? null : doc.articles[articleIdx - 1];
-          let article = doc.articles[articleIdx];
-          let nextArticle = articleIdx == doc.articles.length - 1 ? null : doc.articles[articleIdx + 1];
+        let flatArticlesList = Array.from(doc.articles.values()).reduce((f, a) => f.concat(a), []);
+
+        for (let articleIdx = 0; articleIdx < flatArticlesList.length; articleIdx++) {
+          let prevArticle = articleIdx == 0 ? null : flatArticlesList[articleIdx - 1];
+          let article = flatArticlesList[articleIdx];
+          let nextArticle = articleIdx == flatArticlesList.length - 1 ? null : flatArticlesList[articleIdx + 1];
 
           if (article.stateChanged) {
             // Regenerate the table of contents for every article, as isActive changes every time
-            let tocCategoriesHtml = "";
+            let tocCategoriesHtml = [];
 
-            for (let tocCategoryName of doc.orderOfCategories) {
-              let tocCategoryEntriesHtml = "";
+            for (let tocCategoryName of doc.articles.keys()) {
+              let tocCategoryEntries = [];
 
-              for (let tocEntry of doc.articles.get(tocCategoryName)) {
+              for (let tocEntry of doc.articles.get(tocCategoryName)!) {
                 let tocEntryName = tocEntry.name;
-                let tocEntryDescription = tocEntry.description || "";
-                let tocArticlePathRelToUrlPrefix = tocEntry.urlDirPath;
+                let tocEntryDescription = (tocEntry as MReferenceArticle).description || "";
+                let tocArticlePathRelToUrlPrefix = tocEntry.createURLPath(doc);
 
-                tocCategoryEntriesHtml += PaneTocCategoryEntry({
-                  url: urlPathPrefix + tocArticlePathRelToUrlPrefix,
+                tocCategoryEntries.push(new VPaneTocCategoryEntry({
+                  URL: urlPathPrefix + tocArticlePathRelToUrlPrefix,
                   name: tocEntryName,
                   description: tocEntryDescription,
                   isActive: tocCategoryName == article.category && article.name == tocEntryName,
-                });
+                }));
               }
 
-              tocCategoriesHtml += PaneTocCategory(tocCategoryName,
-                tocCategoryName == article.category, tocCategoryEntriesHtml);
+              tocCategoriesHtml.push(new VPaneTocCategory({
+                name: tocCategoryName,
+                isActive: tocCategoryName == article.category,
+                entries: tocCategoryEntries,
+              }));
             }
 
             let articleHtml;
-            let articleNavPrev = prevArticle ? new ArticleNavigator(
-              ArticleNavigator.DIR_PREV,
-              urlPathPrefix + prevArticle.urlDirPath,
-              prevArticle.name
-            ) : "";
-            let articleNavNext = nextArticle ? new ArticleNavigator(
-              ArticleNavigator.DIR_NEXT,
-              urlPathPrefix + nextArticle.urlDirPath,
-              nextArticle.name
-            ) : "";
+            let articleNavPrev = prevArticle ? new VArticleNavigator({
+              dir: VArticleNavigatorDirection.PREV,
+              href: urlPathPrefix + prevArticle.createURLPath(doc),
+              name: prevArticle.name,
+            }) : null;
+            let articleNavNext = nextArticle ? new VArticleNavigator({
+              dir: VArticleNavigatorDirection.NEXT,
+              href: urlPathPrefix + nextArticle.createURLPath(doc),
+              name: nextArticle.name,
+            }) : null;
+
+            let vArticleHeader = new VArticleHeader({
+              category: article.category,
+              name: article.name,
+            });
+            let vArticleFooter = new VArticleFooter({
+              navPrev: articleNavPrev,
+              navNext: articleNavNext,
+            });
 
             switch (article.type) {
-            case ArticleType.ARTICLE_TYPE_REFERENCE:
-              let signaturesHtml = article.signatures
-                .map(s => ReferenceArticleSignature(parseTypedCodeLine(s.definition)))
-                .join("");
+            case MArticleType.ARTICLE_TYPE_REFERENCE:
+              article = article as MReferenceArticle;
+              let loadedSignatures = (article as MReferenceArticle).signatures
+                .map(s => new VReferenceArticleSignature({
+                  code: parseTypedCodeLine(s.definition),
+                }));
 
-              let argumentsHtml = await Promise.all(article.parameters
+              let loadedArguments = await Promise.all((article as MReferenceArticle).parameters
                 .map(p => parseMarkdown(p.definition, true, internalLinkCallback)
-                  .then(md => ReferenceArticleArgument(p.name, md))))
-                .join("");
+                  .then(md => new VReferenceArticleArgument({
+                    name: p.name,
+                    description: md,
+                  }))));
 
-              let returnsHtml = await Promise.all(article.returns
+              let loadedReturns = await Promise.all((article as MReferenceArticle).returns
                 .map(r => parseMarkdown(r.definition, true, internalLinkCallback)
-                  .then(md => ReferenceArticleReturn(md))))
-                .join("");
+                  .then(md => new VReferenceArticleReturn({
+                    value: md,
+                  }))));
 
-              articleHtml = new ReferenceArticle({
-                category: article.category,
-                name: article.name,
-                description: article.description,
-                signaturesHtml: signaturesHtml,
-                argumentsHtml: argumentsHtml,
-                returnsHtml: returnsHtml,
-                articleNavPrev, articleNavNext
+              articleHtml = new VReferenceArticle({
+                header: vArticleHeader,
+                footer: vArticleFooter,
+                description: (article as MReferenceArticle).description,
+                signatures: loadedSignatures,
+                parameters: loadedArguments,
+                returns: loadedReturns,
               });
 
               break;
 
-            case ArticleType.ARTICLE_TYPE_CONTENT:
-              let contentHtml = parseMarkdown(article.content, false, internalLinkCallback);
+            case MArticleType.ARTICLE_TYPE_CONTENT:
+              let contentHtml = await parseMarkdown((article as MContentArticle).content!, false, internalLinkCallback);
 
-              articleHtml = ContentArticle({
-                category: article.category,
-                name: article.name,
-                contentHtml: contentHtml,
-                articleNavPrev, articleNavNext
+              articleHtml = new VContentArticle({
+                header: vArticleHeader,
+                footer: vArticleFooter,
+                content: {HTML: contentHtml},
               });
 
               break;
+
+            default:
+              throw new Error(`INTERR Unknown article type`);
             }
 
-            let pageHtml = Page({
-              url: urlPathPrefix + article.urlDirPath,
+            let url = urlPathPrefix + article.createURLPath(doc);
+
+            let pageHtml = new VPage({
+              URL: url,
               urlPathPrefix: urlPathPrefix,
-              feedbackUrl: feedbackUrl,
+              feedback: !feedbackUrl ? null : new VFormFeedback({
+                pageID: url,
+                endpointURL: feedbackUrl,
+              }),
               logo: logo,
               viewportTitle: `${article.name} | ${projectName} Documentation`,
               activeProject: activeProject,
-              tocCategoriesHtml: tocCategoriesHtml,
-              articleHtml: articleHtml,
+              tocCategories: tocCategoriesHtml,
+              article: articleHtml,
             });
 
-            let articleUrlFilePath = article.urlDirPath + "index.html";
+            let articleUrlFilePath = article.createURLPath(doc) + "index.html";
 
-            fs.ensureDirSync(intermediateDir + article.urlDirPath);
+            fs.ensureDirSync(intermediateDir + article.createURLPath(doc));
             fs.writeFileSync(intermediateDir + articleUrlFilePath, pageHtml);
             generatedHtmlFiles.push(articleUrlFilePath);
           }
@@ -222,7 +264,7 @@ export async function compile (
   }
 
   zcompile({
-    source: __dirname + "/../res",
+    source: __dirname + "/../../resources",
     destination: outputDir,
 
     minifySelectors: false,

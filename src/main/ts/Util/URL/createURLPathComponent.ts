@@ -1,9 +1,9 @@
-export function createURLPathComponent(path: string | number): string {
+export function createURLPathComponent (path: string | number): string {
   path = "" + path;
 
   // Allowed: $ .
   path = path.replace(/[`~!@#%^&*()+={}\[\]|\\:;'"<>?,\/]/g, "");
-  path = path.replace(/ /g, "-");
+  path = path.replace(/\s/gu, "-");
   // Replace contiguous hyphens with single one
   path = path.replace(/-+/g, "-");
   // Removing starting or trailing hyphens

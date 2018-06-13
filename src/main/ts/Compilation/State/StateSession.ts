@@ -1,27 +1,19 @@
 import * as fs from "fs-extra";
 import {deepEquals} from "../../Util/Equality/deepEquals";
-import {ArticleState} from "./ArticleState";
+import {ArticleState} from "./ArticleState/ArticleState";
 import {escapeRegExp} from "../../Util/RegExp/escapeRegExp";
 import {StateFile} from "./StateFile";
-import {FQA} from "../../Util/Referenza/FQA";
-import {VersionMetadata} from "../Metadata/VersionMetadata";
+import {MetadataState} from "./MetadataState/MetadataState";
+import {VersionReference} from "../../Util/Reference/VersionReference";
+import {ArticleReference} from "../../Util/Reference/ArticleReference";
+import {CategoryReference} from "../../Util/Reference/CategoryReference";
 
 export class StateSession {
+  private static readonly keyDelimiter = "/";
   private readonly file: StateFile;
   private readonly statePath: string;
   private readonly stateLockPath: string;
   private ended: boolean = false;
-
-  private static readonly keyDelimiter = "/";
-
-  private static createKey (...parts: (string | number)[]): string {
-    for (let p of parts) {
-      if (`${p}`.indexOf(StateSession.keyDelimiter) > -1) {
-        throw new SyntaxError(`Invalid component name "${p}"`);
-      }
-    }
-    return parts.join(StateSession.keyDelimiter);
-  }
 
   constructor (statePath: string) {
     if (!statePath || /[\/\\]$/.test(statePath)) {
@@ -48,7 +40,16 @@ export class StateSession {
     this.stateLockPath = stateLockPath;
   }
 
-  updateMetadataState ({project, version}: FQA, metadata: VersionMetadata): boolean {
+  private static createKey (...parts: (string | number)[]): string {
+    for (let p of parts) {
+      if (`${p}`.indexOf(StateSession.keyDelimiter) > -1) {
+        throw new SyntaxError(`Invalid component name "${p}"`);
+      }
+    }
+    return parts.join(StateSession.keyDelimiter);
+  }
+
+  updateMetadataState ({project, version}: VersionReference, metadata: MetadataState): boolean {
     let key = StateSession.createKey(project, version);
     let currentMeta = this.file.metadataStates[key];
 
@@ -65,29 +66,29 @@ export class StateSession {
     }
   }
 
-  getArticleState ({project, version, category, entry}: FQA): ArticleState | null {
-    let key = StateSession.createKey(project, version, entry);
+  getArticleState ({project, version, category, article}: ArticleReference): ArticleState | null {
+    let key = StateSession.createKey(project, version, category, article);
     let state = this.file.articleStates[key];
     return state || null;
   }
 
-  setArticleState ({project, version, category, entry}: FQA, state: ArticleState): void {
-    let key = StateSession.createKey(project, version, entry);
+  setArticleState ({project, version, category, article}: ArticleReference, state: ArticleState): void {
+    let key = StateSession.createKey(project, version, category, article);
     this.file.articleStates[key] = state;
   }
 
-  categoryEntryNames ({project, version, category}: FQA): Set<string> {
+  categoryEntryNames ({project, version, category}: CategoryReference): Set<string> {
     let key_prefix = StateSession.createKey(project, version, category);
     let regexp = new RegExp(`^${escapeRegExp(key_prefix)}${escapeRegExp(StateSession.keyDelimiter)}.+$`);
     return new Set(
       Object.keys(this.file.articleStates)
         .filter(key => regexp.test(key))
-        .map(key => key.split(StateSession.keyDelimiter).pop())
+        .map(key => key.split(StateSession.keyDelimiter).pop()!)
     );
   }
 
-  deleteArticleState ({project, version, category, entry}: FQA): void {
-    let key = StateSession.createKey(project, version, entry);
+  deleteArticleState ({project, version, category, article}: ArticleReference): void {
+    let key = StateSession.createKey(project, version, category, article);
     delete this.file.articleStates[key];
   }
 

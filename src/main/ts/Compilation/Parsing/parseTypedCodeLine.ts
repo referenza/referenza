@@ -1,4 +1,4 @@
-export function parseTypedCodeLine(codeText): string {
+export function parseTypedCodeLine (codeText: string): string {
   // Need to match prefix as ?= is lookahead, not lookbehind
   return codeText.replace(
     /(true|false)/g,

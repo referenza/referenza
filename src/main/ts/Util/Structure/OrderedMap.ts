@@ -12,6 +12,22 @@ export class OrderedMap<K, V> extends Map<K, V> {
     super(iterable);
   }
 
+  get firstKey (): K {
+    return this.order[0];
+  }
+
+  get firstValue (): V | undefined {
+    return this.get(this.firstKey);
+  }
+
+  get lastKey (): K {
+    return this.order[this.order.length - 1];
+  }
+
+  get lastValue (): V | undefined {
+    return this.get(this.lastKey);
+  }
+
   [Symbol.iterator] (): IterableIterator<[K, V]> {
     return this.entries();
   }

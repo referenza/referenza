@@ -1,8 +1,8 @@
-import {prepareTextOrHTML, TextOrHTML} from "./HTMLValue";
+import {prepareTextOrHTML, TextOrHTML} from "../../Util/HTML/HTMLValue";
 
 export function generateCoreAttrs ({ID, classes = [], tooltip}: TagConfig) {
   let IDAttr = ID != undefined ? `id="${prepareTextOrHTML(ID)}"` : "";
-  let classesAttr = `class="${classes.map(prepareTextOrHTML)}"`;
+  let classesAttr = `class="${classes.map(prepareTextOrHTML).join(" ")}"`;
   let titleAttr = tooltip != undefined ? `title="${prepareTextOrHTML(tooltip)}"` : "";
 
   return `${IDAttr} ${classesAttr} ${titleAttr}`;

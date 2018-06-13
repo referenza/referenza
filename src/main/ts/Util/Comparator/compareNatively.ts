@@ -1,6 +1,6 @@
 type SortablePrimitive = number | string | boolean;
 
-export function compareNatively<T extends SortablePrimitive>(a: T, b: T): number {
+export function compareNatively<T extends SortablePrimitive> (a: T, b: T): number {
   if (a < b) {
     return -1;
   }

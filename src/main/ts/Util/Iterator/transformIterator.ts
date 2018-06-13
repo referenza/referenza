@@ -17,7 +17,7 @@ export function transformIterator<I, O> (baseIter: Iterator<I>, transformer: (in
       };
     },
 
-    [Symbol.iterator](): IterableIterator<O> {
+    [Symbol.iterator] (): IterableIterator<O> {
       return this;
     },
   };

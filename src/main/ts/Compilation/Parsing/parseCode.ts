@@ -3,7 +3,7 @@ import * as hljs from "highlight.js";
 import {parseTypedCodeLine} from "./parseTypedCodeLine";
 import {generateMermaidSVG} from "./generateMermaidSVG";
 
-export function parseCode(code, language): Promise<string> {
+export function parseCode (code: string, language: string): Promise<string> {
   if (language == "mermaid") {
     return generateMermaidSVG(code);
 
@@ -12,12 +12,12 @@ export function parseCode(code, language): Promise<string> {
 
     if (language && /^x-referenza-/.test(language)) {
       switch (language.slice(12)) {
-        case "typedline":
-          html = parseTypedCodeLine(code);
-          break;
+      case "typedline":
+        html = parseTypedCodeLine(code);
+        break;
 
-        default:
-          throw new SyntaxError(`Unknown custom language "${language}"`);
+      default:
+        throw new SyntaxError(`Unknown custom language "${language}"`);
       }
 
     } else if (language) {
