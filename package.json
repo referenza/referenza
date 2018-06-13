@@ -6,6 +6,7 @@
     "referenza": "dist/main/ts/main.js"
   },
   "main": "dist/main/ts/main.js",
+  "types": "dist/main/ts/main.d.ts",
   "files": [
     "dist/**"
   ],

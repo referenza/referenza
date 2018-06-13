@@ -16,7 +16,6 @@
     "allowJs": false,
 
     "declaration": true,
-    "declarationDir": "lib",
 
     "outDir": "dist/main/ts",
 
