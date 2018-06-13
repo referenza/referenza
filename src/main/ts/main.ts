@@ -113,21 +113,22 @@ if (!module.parent) {
 
     let main_command = main_parsed_args.command;
 
-    let parsed_args: any;
-    let handler: any = Object.keys(COMMANDS).find(command => {
+    let handled = Object.keys(COMMANDS).some(command => {
       if (main_command == command) {
-        parsed_args = commandLineArgs(COMMANDS[command].options, {argv: process.argv.slice(3)});
+        let parsed_args: any = commandLineArgs(COMMANDS[command].options, {argv: process.argv.slice(3)});
 
         if (!handleCommonOptions(parsed_args, COMMANDS[command].help)) {
-          return COMMANDS[command].action;
+          COMMANDS[command].action(parsed_args);
         }
+
+        return true;
       }
+      
+      return false;
     });
 
-    if (!handler) {
+    if (!handled) {
       cliError(`Unknown command "${main_command}"`);
     }
-
-    handler(parsed_args);
   }
 }
