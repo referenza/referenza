@@ -1,6 +1,6 @@
 {
   "name": "referenza",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Create static HTML project documentation using Markdown",
   "bin": {
     "referenza": "dist/main/ts/main.js"
