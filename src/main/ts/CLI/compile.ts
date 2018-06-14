@@ -31,6 +31,12 @@ export = {
       description: "Location of the state file that will be read and written to.\nA lock file will be created in the same directory."
     },
     {
+      alias: "c",
+      name: "clean",
+      type: Boolean,
+      description: "Erase and ignore any existing state and compile everything from sources.",
+    },
+    {
       alias: "m",
       name: "metadata",
       type: String,
