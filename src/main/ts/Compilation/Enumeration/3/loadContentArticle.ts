@@ -1,7 +1,8 @@
 import * as fs from "fs";
 import {MContentArticle} from "../../Model/Article/ContentArticle/MContentArticle";
-import {ContentArticleState} from "../../State/ArticleState/ContentArticleState";
 import {loadSpecificArticleArgs, loadSpecificArticleReturn} from "./loadArticle";
+import {ArticleStateType, equalArticleStates} from "../../State/ArticleState/ArticleState";
+import {ContentArticleState} from "../../State/ArticleState/ContentArticleState";
 
 export function loadContentArticle (
   {
@@ -19,12 +20,13 @@ export function loadContentArticle (
   // TODO: Find edge cases where this fails
   let articleMtime = stats.mtimeMs;
 
-  let articleCurrentState = new ContentArticleState(
-    articleMtime
-  );
+  let articleCurrentState: ContentArticleState = {
+    objtype: ArticleStateType.CONTENT_ARTICLE_STATE,
+    mtime: articleMtime,
+  };
 
   // TODO Move metadata state changed to compiler
-  if (!lastState || lastState!.isDiffTo(articleCurrentState)) {
+  if (!equalArticleStates(lastState, articleCurrentState)) {
     // Article state has changed, so need to load data to recompile later
     article.stateChanged = true;
 

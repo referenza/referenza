@@ -1,16 +1,10 @@
-import {ArticleState, ArticleStateType} from "./ArticleState";
+import {_ArticleState, ArticleStateType} from "./ArticleState";
 
-export class ContentArticleState extends ArticleState {
+export interface ContentArticleState extends _ArticleState {
+  objtype: ArticleStateType.CONTENT_ARTICLE_STATE;
   mtime: number;
+}
 
-  constructor (mtime: number) {
-    super(ArticleStateType.CONTENT_ARTICLE_STATE);
-
-    this.mtime = mtime;
-  }
-
-  isDiffTo (other: ArticleState): boolean {
-    return !(other instanceof ContentArticleState) ||
-      this.mtime != other.mtime;
-  }
+export function equalContentArticleStates (a: ContentArticleState, b: ContentArticleState): boolean {
+  return a.mtime == b.mtime;
 }

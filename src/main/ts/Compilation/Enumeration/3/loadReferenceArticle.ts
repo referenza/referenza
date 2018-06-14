@@ -7,6 +7,7 @@ import {compareOrderPrefixedFilenames} from "../../../Util/Comparator/compareOrd
 import {MReferenceArticleSignature} from "../../Model/Article/ReferenceArticle/MReferenceArticleSignature";
 import {MReferenceArticleParameter} from "../../Model/Article/ReferenceArticle/MReferenceArticleParameter";
 import {loadSpecificArticleArgs, loadSpecificArticleReturn} from "./loadArticle";
+import {ArticleStateType, equalArticleStates} from "../../State/ArticleState/ArticleState";
 
 export function loadReferenceArticle (
   {
@@ -44,16 +45,17 @@ export function loadReferenceArticle (
     .sort(compareOrderPrefixedFilenames)
     .map(fn => fs.lstatSync(articleReturnsPath + fn).mtimeMs);
 
-  let articleCurrentState = new ReferenceArticleState(
-    articleDescriptionMtime,
-    articleSignatureMtimes,
-    articleArgumentNames,
-    articleArgumentMtimes,
-    articleReturnMtimes
-  );
+  let articleCurrentState: ReferenceArticleState = {
+    objtype: ArticleStateType.REFERENCE_ARTICLE_STATE,
+    descriptionMtime: articleDescriptionMtime,
+    signatureMtimes: articleSignatureMtimes,
+    argumentNames: articleArgumentNames,
+    argumentMtimes: articleArgumentMtimes,
+    returnMtimes: articleReturnMtimes
+  };
 
   // TODO Move metadata state changed to compiler
-  if (lastState || lastState!.isDiffTo(articleCurrentState)) {
+  if (!equalArticleStates(lastState, articleCurrentState)) {
     // Article state has changed, so need to load data to recompile later
     article.stateChanged = true;
 

@@ -1,14 +1,32 @@
+import {ContentArticleState, equalContentArticleStates} from "./ContentArticleState";
+import {equalReferenceArticleStates, ReferenceArticleState} from "./ReferenceArticleState";
+
 export enum ArticleStateType {
   REFERENCE_ARTICLE_STATE = "ReferenceArticleState",
   CONTENT_ARTICLE_STATE = "ContentArticleState",
 }
 
-export abstract class ArticleState {
+export interface _ArticleState {
   objtype: ArticleStateType;
+}
 
-  protected constructor (objtype: ArticleStateType) {
-    this.objtype = objtype;
+export type ArticleState = ContentArticleState | ReferenceArticleState;
+
+
+export function equalArticleStates (a: ArticleState | null, b: ArticleState | null): boolean {
+  if (!a || !b) {
+    return false;
   }
 
-  abstract isDiffTo (other: ArticleState): boolean;
+  if (a.objtype != b.objtype) {
+    return false;
+  }
+
+  switch (a.objtype) {
+  case ArticleStateType.CONTENT_ARTICLE_STATE:
+    return equalContentArticleStates(a, b as ContentArticleState);
+
+  case ArticleStateType.REFERENCE_ARTICLE_STATE:
+    return equalReferenceArticleStates(a, b as ReferenceArticleState);
+  }
 }
