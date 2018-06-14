@@ -83,9 +83,9 @@ export = {
       statePath: args.state,
       metadataFileName: args.metadata,
       logo: args.logo,
-      feedbackUrl: args.feedback,
-      projectNames: args.projects,
-      urlPathPrefix: args.prefix,
+      feedbackEndpoint: args.feedback,
+      projects: args.projects,
+      prefix: args.prefix,
     });
   },
   help: [

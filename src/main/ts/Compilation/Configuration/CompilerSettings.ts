@@ -10,9 +10,9 @@ export interface CompilerSettings {
   metadataFileName?: string;
 
   logo?: string;
-  feedbackUrl?: string;
+  feedbackEndpoint?: string;
 
-  projectNames: ReadonlyArray<string>;
+  projects: ReadonlyArray<string>;
 
-  urlPathPrefix?: string;
+  prefix?: string;
 }

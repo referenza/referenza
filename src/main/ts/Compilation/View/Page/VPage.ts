@@ -7,7 +7,7 @@ import {VFeedback} from "../Feedback/VFeedback";
 
 export interface VPageProps {
   URL: string;
-  urlPathPrefix: string;
+  prefix: string;
   feedback: VFeedback | null;
   logo: string;
   viewportTitle: string;
@@ -25,7 +25,7 @@ export class VPage extends View {
   }
 
   render () {
-    let urlPathPrefixHTML = escapeHTML(this.props.urlPathPrefix);
+    let prefixHTML = escapeHTML(this.props.prefix);
     let feedbackHTML = `${this.props.feedback || ""}`;
     let logoHTML = escapeHTML(this.props.logo);
     let viewportTitleHTML = escapeHTML(this.props.viewportTitle);
@@ -43,12 +43,12 @@ export class VPage extends View {
   
         <title>${viewportTitleHTML}</title>
   
-        <link rel="stylesheet" href="${urlPathPrefixHTML}/_common/app.css">
+        <link rel="stylesheet" href="${prefixHTML}/_common/app.css">
         <noscript>
-          <link rel="stylesheet" href="${urlPathPrefixHTML}/_common/app.noscript.css">
+          <link rel="stylesheet" href="${prefixHTML}/_common/app.noscript.css">
         </noscript>
   
-        <script defer src="${urlPathPrefixHTML}/_common/app.js"></script>
+        <script defer src="${prefixHTML}/_common/app.js"></script>
       </head>
   
       <body>

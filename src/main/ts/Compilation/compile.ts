@@ -35,19 +35,19 @@ export async function compile (
     clean = false,
 
     sourceDir,
-    intermediateDir,
+    intermediateDir = null,
     outputDir,
 
     statePath,
 
     metadataFileName = "__metadata__.js",
 
-    logo = "",
-    feedbackUrl,
+    logo = "Docs",
+    feedbackEndpoint = null,
 
-    projectNames,
+    projects,
 
-    urlPathPrefix = "/",
+    prefix = "",
   }: CompilerSettings
 ) {
   // Ensure clean intermediate directory
@@ -71,14 +71,14 @@ export async function compile (
   // Normalise directory paths and ensure trailing slash
   [sourceDir, intermediateDir, outputDir] = [sourceDir, intermediateDir, outputDir].map(normaliseDirPath);
 
-  if (!/^\//.test(urlPathPrefix)) {
+  if (prefix != "" && !/^\//.test(prefix)) {
     throw new TypeError("Invalid URL path prefix");
   }
 
   let generatedHtmlFiles = [];
   let redirects = [];
 
-  for (let projectName of projectNames) {
+  for (let projectName of projects) {
     let stateSession = new StateSession(statePath);
 
     try {
@@ -94,8 +94,8 @@ export async function compile (
       for (let doc of versions) {
         let activeProject = new VHeaderProject({
           name: doc.name,
-          otherProjects: projectNames.filter(pn => doc.name != pn).map(pn => new VHeaderProjectMenuEntry({
-            URL: urlPathPrefix + "/" + createURLPathComponent(pn) + "/",
+          otherProjects: projects.filter(pn => doc.name != pn).map(pn => new VHeaderProjectMenuEntry({
+            URL: prefix + "/" + createURLPathComponent(pn) + "/",
             name: pn,
           })),
           activeVersion: `${latestVersionDoc.version}`,
@@ -110,7 +110,7 @@ export async function compile (
           for (let articles of doc.articles.values()) {
             for (let article of articles) {
               if (article.name === id) {
-                return urlPathPrefix + article.createURLPath(doc);
+                return prefix + article.createURLPath(doc);
               }
             }
           }
@@ -146,7 +146,7 @@ export async function compile (
                 let tocArticlePathRelToUrlPrefix = tocEntry.createURLPath(doc);
 
                 tocCategoryEntries.push(new VPaneTocCategoryEntry({
-                  URL: urlPathPrefix + tocArticlePathRelToUrlPrefix,
+                  URL: prefix + tocArticlePathRelToUrlPrefix,
                   name: tocEntryName,
                   description: tocEntryDescription,
                   isActive: tocCategoryName == article.category && article.name == tocEntryName,
@@ -163,12 +163,12 @@ export async function compile (
             let articleHtml;
             let articleNavPrev = prevArticle ? new VArticleNavigator({
               dir: VArticleNavigatorDirection.PREV,
-              href: urlPathPrefix + prevArticle.createURLPath(doc),
+              href: prefix + prevArticle.createURLPath(doc),
               name: prevArticle.name,
             }) : null;
             let articleNavNext = nextArticle ? new VArticleNavigator({
               dir: VArticleNavigatorDirection.NEXT,
-              href: urlPathPrefix + nextArticle.createURLPath(doc),
+              href: prefix + nextArticle.createURLPath(doc),
               name: nextArticle.name,
             }) : null;
 
@@ -228,14 +228,14 @@ export async function compile (
               throw new Error(`INTERR Unknown article type`);
             }
 
-            let url = urlPathPrefix + article.createURLPath(doc);
+            let url = prefix + article.createURLPath(doc);
 
             let pageHtml = new VPage({
               URL: url,
-              urlPathPrefix: urlPathPrefix,
-              feedback: !feedbackUrl ? null : new VFormFeedback({
+              prefix: prefix,
+              feedback: !feedbackEndpoint ? null : new VFormFeedback({
                 pageID: url,
-                endpointURL: feedbackUrl,
+                endpointURL: feedbackEndpoint,
               }),
               logo: logo,
               viewportTitle: `${article.name} | ${projectName} Documentation`,
@@ -301,7 +301,7 @@ export async function compile (
     let to_noslash = to.replace(/\/+$/, "");
     let to_slash = to_noslash + "/";
 
-    fs.outputFileSync(outputDir + from_slash + "index.html", createRedirectHTML(urlPathPrefix + to_slash));
+    fs.outputFileSync(outputDir + from_slash + "index.html", createRedirectHTML(prefix + to_slash));
   }
 
   fs.removeSync(intermediateDir);
