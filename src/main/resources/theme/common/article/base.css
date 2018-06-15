@@ -181,7 +181,21 @@
 }
 
 .tabbed-sections-labels {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 2.75rem;
+  line-height: 2.75rem;
+
   border-bottom: 1px solid transparent;
+
+  white-space: nowrap;
+  overflow-x: auto;
+
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .tabbed-sections-labels > li {
