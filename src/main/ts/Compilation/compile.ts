@@ -27,6 +27,7 @@ import {VArticleHeader} from "./View/Article/VArticleHeader";
 import {VArticleFooter} from "./View/Article/VArticleFooter";
 import {VFormFeedback} from "./View/Feedback/VFormFeedback";
 import {createBlankStateFileContents} from "./State/StateFile";
+import {ThemePackUnitType} from "./Configuration/ThemePackUnit";
 
 const zcompile = require("zcompile");
 
@@ -41,6 +42,41 @@ export async function compile (
     statePath,
 
     metadataFileName = "__metadata__.js",
+
+    themePacks = [
+      {
+        prefix: "common",
+        sourceDir: __dirname + "/../../resources/theme/common",
+        units: [
+          {
+            fileName: "app.js",
+            type: ThemePackUnitType.SCRIPT,
+          },
+          {
+            fileName: "app.css",
+            type: ThemePackUnitType.STYLE,
+          },
+          {
+            fileName: "app.noscript.css",
+            type: ThemePackUnitType.NOSCRIPT_STYLE,
+          },
+        ],
+      },
+      {
+        prefix: "solarised",
+        sourceDir: __dirname + "/../../resources/theme/solarised",
+        units: [
+          {
+            fileName: "app.css",
+            type: ThemePackUnitType.STYLE,
+          },
+          {
+            fileName: "app.noscript.css",
+            type: ThemePackUnitType.NOSCRIPT_STYLE,
+          },
+        ],
+      },
+    ],
 
     logo = "Docs",
     feedbackEndpoint = null,
@@ -237,6 +273,7 @@ export async function compile (
                 pageID: url,
                 endpointURL: feedbackEndpoint,
               }),
+              themes: themePacks,
               logo: logo,
               viewportTitle: `${article.name} | ${projectName} Documentation`,
               activeProject: activeProject,
@@ -263,21 +300,19 @@ export async function compile (
     }
   }
 
-  zcompile({
-    source: __dirname + "/../../resources",
-    destination: outputDir,
+  for (let themePack of themePacks) {
+    zcompile({
+      source: themePack.sourceDir,
+      destination: outputDir + "/_common/" + themePack.prefix,
 
-    minifySelectors: false,
-    minifyHTML: {
-      minifyInlineCSS: true,
-      minifyInlineJS: true,
-    },
-    files: [
-      "_common/app.css",
-      "_common/app.noscript.css",
-      "_common/app.js",
-    ],
-  });
+      minifySelectors: false,
+      minifyHTML: {
+        minifyInlineCSS: true,
+        minifyInlineJS: true,
+      },
+      files: themePack.units.map(u => u.fileName),
+    });
+  }
 
   if (generatedHtmlFiles.length) {
     zcompile({

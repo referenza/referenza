@@ -123,7 +123,7 @@ if (!module.parent) {
 
         return true;
       }
-      
+
       return false;
     });
 

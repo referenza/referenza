@@ -1,3 +1,5 @@
+import {ThemePack} from "./ThemePack";
+
 export interface CompilerSettings {
   clean?: boolean;
 
@@ -6,6 +8,8 @@ export interface CompilerSettings {
   outputDir: string;
 
   statePath: string;
+
+  themePacks?: ReadonlyArray<ThemePack>;
 
   metadataFileName?: string;
 

@@ -4,11 +4,14 @@ import {VPaneTocCategory} from "../Pane/VPaneTocCategory";
 import {VArticle} from "../Article/VArticle";
 import {VHeaderProject} from "../Header/VHeaderProject";
 import {VFeedback} from "../Feedback/VFeedback";
+import {ThemePack} from "../../Configuration/ThemePack";
+import {ThemePackUnitType} from "../../Configuration/ThemePackUnit";
 
 export interface VPageProps {
   URL: string;
   prefix: string;
   feedback: VFeedback | null;
+  themes: ReadonlyArray<ThemePack>;
   logo: string;
   viewportTitle: string;
   activeProject: VHeaderProject;
@@ -33,6 +36,33 @@ export class VPage extends View {
     let tocCategoriesHTML = this.props.tocCategories.join("");
     let articleHTML = this.props.article.render();
 
+    let themesHTML = "";
+    for (let themePack of this.props.themes) {
+      let themePackPrefixHTML = escapeHTML(themePack.prefix);
+
+      for (let unit of themePack.units) {
+        let fileNameHTML = escapeHTML(unit.fileName);
+        let unitPathHTML = `${prefixHTML}/_common/${themePackPrefixHTML}/${fileNameHTML}`;
+
+        switch (unit.type) {
+        case ThemePackUnitType.SCRIPT:
+          themesHTML += `<script defer src="${unitPathHTML}"></script>`;
+          break;
+
+        case ThemePackUnitType.STYLE:
+          themesHTML += `<link rel="stylesheet" href="${unitPathHTML}">`;
+          break;
+
+        case ThemePackUnitType.NOSCRIPT_STYLE:
+          themesHTML += `<noscript><link rel="stylesheet" href="${unitPathHTML}"></noscript>`;
+          break;
+
+        default:
+          throw new Error(`INTERR Unknown theme pack unit type: ${unit.type}`);
+        }
+      }
+    }
+
     return `
       <!DOCTYPE html>
       <html lang="en-gb">
@@ -43,12 +73,7 @@ export class VPage extends View {
   
         <title>${viewportTitleHTML}</title>
   
-        <link rel="stylesheet" href="${prefixHTML}/_common/app.css">
-        <noscript>
-          <link rel="stylesheet" href="${prefixHTML}/_common/app.noscript.css">
-        </noscript>
-  
-        <script defer src="${prefixHTML}/_common/app.js"></script>
+        ${themesHTML}
       </head>
   
       <body>
