@@ -32,7 +32,6 @@
   content: '';
   display: block;
   height: 0.125rem; /* Same as border-height */
-  background: #FDF6E3; /* Same as border-color */
 }
 
 .header-project-menu-container:first-of-type::before {
@@ -43,11 +42,6 @@
 .header-project-menu-container:last-of-type::before {
   width: 9rem;
   float: left;
-}
-
-.header-project-menu-container:target,
-.header-project-menu-container:target + .header-project-link {
-  border-color: #FDF6E3;
 }
 
 .header-project-menu-container:target {

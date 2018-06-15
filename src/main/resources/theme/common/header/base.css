@@ -1,6 +1,4 @@
 #header {
-  background: #101e26;
-
   display: table;
   width: 100%;
 
@@ -23,14 +21,7 @@
   overflow: auto;
 }
 
-.header-project-link,
-.header-project-menu-container {
-  background: black;
-}
-
 .header-project-link {
-  color: #FDF6E3;
-
   display: inline-block;
   vertical-align: middle;
   font-weight: 600;
@@ -65,7 +56,6 @@
 
 .header-project-menu-close-link {
   display: block;
-  color: gray;
 }
 
 .header-project-menu-title {

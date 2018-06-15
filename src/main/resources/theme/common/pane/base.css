@@ -1,10 +1,4 @@
-#pane {
-  background: #101e26;
-}
-
 #toc-search-wrapper {
-  background: #073642;
-
   display: block;
   position: relative;
 }
@@ -35,10 +29,6 @@
   outline: 0;
 }
 
-#toc-search:focus {
-  border-color: #666;
-}
-
 #toc-categories {
   margin: 0;
 }
@@ -48,7 +38,6 @@
 }
 
 .toc-category-name-wrapper {
-  color: gray;
   text-transform: uppercase;
 
   font-size: 0.75rem;
@@ -109,8 +98,4 @@ input[name="toc-category-expanded"]:checked ~ .toc-category-entries,
   display: block;
   padding: 0.5rem 1rem 0.5rem 1.625rem; /* #toc-search left padding minus border-width */
   font-size: 0.875rem;
-}
-
-.toc-category-entry.active {
-  border-color: #2AA198;
 }
