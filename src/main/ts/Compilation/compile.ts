@@ -79,7 +79,7 @@ export async function compile (
     ],
 
     logo = "Docs",
-    feedbackEndpoint = null,
+    feedback = null,
 
     projects,
 
@@ -266,13 +266,29 @@ export async function compile (
 
             let url = prefix + article.createURLPath(doc);
 
+            let vFeedback = null;
+            if (feedback) {
+              switch (feedback.type) {
+              case FeedbackType.FORM:
+                vFeedback = new VFormFeedback({
+                  pageID: url,
+                  endpointURL: (feedback as FormFeedbackSettings).endpointURL,
+                });
+                break;
+
+              case FeedbackType.GITHUB:
+                vFeedback = new VGitHubFeedback({
+                  repoOwner: (feedback as GitHubFeedbackSettings).repoOwner,
+                  repoName: (feedback as GitHubFeedbackSettings).repoName,
+                });
+                break;
+              }
+            }
+
             let pageHtml = new VPage({
               URL: url,
               prefix: prefix,
-              feedback: !feedbackEndpoint ? null : new VFormFeedback({
-                pageID: url,
-                endpointURL: feedbackEndpoint,
-              }),
+              feedback: vFeedback,
               themes: themePacks,
               logo: logo,
               viewportTitle: `${article.name} | ${projectName} Documentation`,

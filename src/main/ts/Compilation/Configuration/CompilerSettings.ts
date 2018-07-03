@@ -1,4 +1,5 @@
 import {ThemePack} from "./ThemePack";
+import {FeedbackSettings} from "./FeedbackSettings";
 
 export interface CompilerSettings {
   clean?: boolean;
@@ -14,7 +15,7 @@ export interface CompilerSettings {
   metadataFileName?: string;
 
   logo?: string;
-  feedbackEndpoint?: string;
+  feedback?: FeedbackSettings;
 
   projects: ReadonlyArray<string>;
 

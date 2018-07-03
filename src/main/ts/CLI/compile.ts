@@ -1,4 +1,9 @@
 import {compile} from "../Compilation/compile";
+import {
+  FeedbackType,
+  FormFeedbackSettings,
+  GitHubFeedbackSettings
+} from "../Compilation/Configuration/FeedbackSettings";
 
 export = {
   options: [
@@ -58,6 +63,13 @@ export = {
       description: "[Optional] URL to send feedback to as an HTTP POST request."
     },
     {
+      alias: "g",
+      name: "GitHub",
+      type: String,
+      typeLabel: "{underline owner/name}",
+      description: "[Optional] The owner and name of a repo to direct feedback to, joined with a slash (e.g. `facebook/react`)."
+    },
+    {
       alias: "P",
       name: "prefix",
       type: String,
@@ -83,7 +95,14 @@ export = {
       statePath: args.state,
       metadataFileName: args.metadata,
       logo: args.logo,
-      feedbackEndpoint: args.feedback,
+      feedback: args.feedback ? {
+        type: FeedbackType.FORM,
+        endpointURL: args.feedback,
+      } as FormFeedbackSettings : args.GitHub ? {
+        type: FeedbackType.GITHUB,
+        repoOwner: args.GitHub.split("/")[0],
+        repoName: args.GitHub.split("/")[1],
+      } as GitHubFeedbackSettings : undefined,
       projects: args.projects,
       prefix: args.prefix,
     });
