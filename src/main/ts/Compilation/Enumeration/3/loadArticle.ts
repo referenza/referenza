@@ -43,24 +43,16 @@ export async function loadArticle (
     entryName,
   }: loadArticleArgs
 ): Promise<loadArticleReturn> {
-  // Article may be content (`entryName.md` file) or reference (`entryName/` folder)
-  let contentEntryFileName = entryName + ".md";
-  let contentEntryFilePath = categorySourceDir + contentEntryFileName;
-  let contentStats;
+  // Article may be content (`entryName.md` file) or reference (`entryName.md/` folder)
+  // Folder must end with `.md` in case both `content.md#content` and `reference.md.md#reference` exist
+  let entryFileName = entryName + ".md";
+  let entryFilePath = categorySourceDir + entryFileName;
+  let entryStats = nullableStat(entryFilePath);
 
-  let referenceEntryFileName = entryName;
-  let referenceEntryFilePath = categorySourceDir + referenceEntryFileName;
-  let referenceStats;
-
-  contentStats = nullableStat(contentEntryFilePath);
-  referenceStats = nullableStat(referenceEntryFilePath);
-
-  if (
-    !referenceStats == !contentStats ||
-    referenceStats && !referenceStats.isDirectory() ||
-    contentStats && !contentStats.isFile()
+  if (!entryStats ||
+    (!entryStats.isFile() && !entryStats.isDirectory())
   ) {
-    throw new ReferenceError(`${categorySourceDir}/${entryName} not found or conflicting`);
+    throw new ReferenceError(`${categorySourceDir}/${entryName} not found`);
   }
 
   let lastState = stateSession.getArticleState({
@@ -71,22 +63,18 @@ export async function loadArticle (
   });
 
   let article;
-  let articleFileName;
 
   let specificArticleLoaderArgs: loadSpecificArticleArgs = {
     name: entryName,
     category: categoryName,
-    path: contentEntryFilePath,
-    stats: contentStats!,
+    path: entryFilePath,
+    stats: entryStats,
     lastState: lastState,
   };
 
-  if (referenceStats) {
-    articleFileName = referenceEntryFileName;
+  if (entryStats.isDirectory()) {
     article = loadReferenceArticle(specificArticleLoaderArgs);
-
   } else {
-    articleFileName = contentEntryFileName;
     article = loadContentArticle(specificArticleLoaderArgs);
   }
 
@@ -103,6 +91,6 @@ export async function loadArticle (
 
   return {
     model: article.model,
-    fileName: articleFileName,
+    fileName: entryFileName,
   };
 }

@@ -19,7 +19,7 @@ export function loadReferenceArticle (
 ): loadSpecificArticleReturn {
   // Check state first before getting contents (it may not have changed)
 
-  let articleDescriptionPath = path + "description.txt";
+  let articleDescriptionPath = path + "/description.txt";
   // Descriptions always need to be loaded, as other articles use them for TOC entry titles
   // NOTE: Descriptions must exist
   let articleDescription = fs.readFileSync(articleDescriptionPath, "utf8").trim();
@@ -27,20 +27,20 @@ export function loadReferenceArticle (
 
   let article = new MReferenceArticle(name, category, articleDescription);
 
-  let articleSignaturesPath = path + "signatures/";
+  let articleSignaturesPath = path + "/signatures/";
   // TODO WARNING: This will not work if 2 signatures are swapped and both have an identical mtime
   let articleSignatureMtimes = (nullableReaddir(articleSignaturesPath) || [])
     .sort(compareOrderPrefixedFilenames)
     .map(fn => fs.lstatSync(articleSignaturesPath + fn).mtimeMs);
 
   // TODO WARNING: This will not work if 2 arguments are swapped and both have an identical name and mtime or the names are kept
-  let articleArgumentsPath = path + "arguments/";
+  let articleArgumentsPath = path + "/arguments/";
   let articleArguments = (nullableReaddir(articleArgumentsPath) || []).sort(compareOrderPrefixedFilenames);
   let articleArgumentNames = articleArguments.map(fn => fn.slice(fn.indexOf(".") + 1, fn.lastIndexOf(".")));
   let articleArgumentMtimes = articleArguments.map(fn => fs.lstatSync(articleArgumentsPath + fn).mtimeMs);
 
   // TODO WARNING: This will not work if 2 returns are swapped and both have an identical mtime
-  let articleReturnsPath = path + "returns/";
+  let articleReturnsPath = path + "/returns/";
   let articleReturnMtimes = (nullableReaddir(articleReturnsPath) || [])
     .sort(compareOrderPrefixedFilenames)
     .map(fn => fs.lstatSync(articleReturnsPath + fn).mtimeMs);
