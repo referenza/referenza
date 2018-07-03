@@ -27,11 +27,7 @@
     "markdown",
     "md"
   ],
-  "author": {
-    "email": "contact@wilsonl.in",
-    "name": "Wilson Lin",
-    "url": "https://wilsonl.in/"
-  },
+  "author": "Wilson Lin",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/wilsonzlin/referenza/issues"
