@@ -5,17 +5,17 @@ import compression from "compression";
 export interface serveArgs {
   port?: number;
   outputDir: string;
-  urlPathPrefix?: string;
+  prefix?: string;
 }
 
 export function serve (
   {
     port = 3072,
     outputDir,
-    urlPathPrefix = "/",
+    prefix = "/",
   }: serveArgs
 ): void {
-  if (!/^\//.test(urlPathPrefix)) {
+  if (!/^\//.test(prefix)) {
     throw new SyntaxError("Invalid URL path prefix");
   }
 
@@ -30,11 +30,11 @@ export function serve (
   let server = express();
 
   server.use(compression());
-  server.use(urlPathPrefix, express.static(outputDir));
+  server.use(prefix, express.static(outputDir));
 
-  if (!/^\/+$/.test(urlPathPrefix)) {
+  if (!/^\/+$/.test(prefix)) {
     server.get("/", (_, res) => {
-      res.redirect(urlPathPrefix + "/");
+      res.redirect(prefix + "/");
     });
   }
 

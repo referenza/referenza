@@ -28,7 +28,7 @@ export = {
     serve({
       outputDir: args.output,
       port: args.port,
-      urlPathPrefix: args.prefix,
+      prefix: args.prefix,
     });
   },
   help: [
