@@ -2,9 +2,6 @@
   "include": [
     "src/main/ts/**/*.ts"
   ],
-  "exclude": [
-    "src/test/**"
-  ],
   "compilerOptions": {
     "target": "es6",
     "lib": ["es5", "es6"],
