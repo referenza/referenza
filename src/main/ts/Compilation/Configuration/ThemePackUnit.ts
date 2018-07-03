@@ -6,5 +6,6 @@ export enum ThemePackUnitType {
 
 export interface ThemePackUnit {
   type: ThemePackUnitType;
-  fileName: string;
+  fileName?: string;
+  URL?: string;
 }

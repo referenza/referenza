@@ -41,20 +41,26 @@ export class VPage extends View {
       let themePackPrefixHTML = escapeHTML(themePack.prefix);
 
       for (let unit of themePack.units) {
-        let fileNameHTML = escapeHTML(unit.fileName);
-        let unitPathHTML = `${prefixHTML}/_common/${themePackPrefixHTML}/${fileNameHTML}`;
+        let unitURLHTML;
+        if (unit.fileName != undefined) {
+          unitURLHTML = `${prefixHTML}/_common/${themePackPrefixHTML}/${escapeHTML(unit.fileName)}`;
+        } else if (unit.URL != undefined) {
+          unitURLHTML = escapeHTML(unit.URL);
+        } else {
+          throw new Error(`Neither URL nor file name provided for theme pack unit`);
+        }
 
         switch (unit.type) {
         case ThemePackUnitType.SCRIPT:
-          themesHTML += `<script defer src="${unitPathHTML}"></script>`;
+          themesHTML += `<script defer src="${unitURLHTML}"></script>`;
           break;
 
         case ThemePackUnitType.STYLE:
-          themesHTML += `<link rel="stylesheet" href="${unitPathHTML}">`;
+          themesHTML += `<link rel="stylesheet" href="${unitURLHTML}">`;
           break;
 
         case ThemePackUnitType.NOSCRIPT_STYLE:
-          themesHTML += `<noscript><link rel="stylesheet" href="${unitPathHTML}"></noscript>`;
+          themesHTML += `<noscript><link rel="stylesheet" href="${unitURLHTML}"></noscript>`;
           break;
 
         default:

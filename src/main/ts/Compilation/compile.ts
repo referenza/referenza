@@ -12,7 +12,6 @@ import {StateSession} from "./State/StateSession";
 import {loadProject} from "./Enumeration/0/loadProject";
 import {VHeaderProject} from "./View/Header/VHeaderProject";
 import {VHeaderProjectMenuEntry} from "./View/Header/VHeaderProjectMenuEntry";
-import {parseTypedCodeLine} from "./Parsing/parseTypedCodeLine";
 import {parseMarkdown} from "./Parsing/parseMarkdown";
 import {VReferenceArticleSignature} from "./View/Article/ReferenceArticle/VReferenceArticleSignature";
 import {VReferenceArticleArgument} from "./View/Article/ReferenceArticle/VReferenceArticleArgument";
@@ -27,7 +26,10 @@ import {VArticleHeader} from "./View/Article/VArticleHeader";
 import {VArticleFooter} from "./View/Article/VArticleFooter";
 import {VFormFeedback} from "./View/Feedback/VFormFeedback";
 import {createBlankStateFileContents} from "./State/StateFile";
-import {ThemePackUnitType} from "./Configuration/ThemePackUnit";
+import {CommonThemePack} from "./Configuration/Default/Theme/CommonThemePack";
+import {SolarisedThemePack} from "./Configuration/Default/Theme/SolarisedThemePack";
+import {FeedbackType, FormFeedbackSettings, GitHubFeedbackSettings} from "./Configuration/FeedbackSettings";
+import {VGitHubFeedback} from "./View/Feedback/VGitHubFeedback";
 
 const zcompile = require("zcompile");
 
@@ -43,40 +45,7 @@ export async function compile (
 
     metadataFileName = "__metadata__.js",
 
-    themePacks = [
-      {
-        prefix: "common",
-        sourceDir: __dirname + "/../../resources/theme/common",
-        units: [
-          {
-            fileName: "app.js",
-            type: ThemePackUnitType.SCRIPT,
-          },
-          {
-            fileName: "app.css",
-            type: ThemePackUnitType.STYLE,
-          },
-          {
-            fileName: "app.noscript.css",
-            type: ThemePackUnitType.NOSCRIPT_STYLE,
-          },
-        ],
-      },
-      {
-        prefix: "solarised",
-        sourceDir: __dirname + "/../../resources/theme/solarised",
-        units: [
-          {
-            fileName: "app.css",
-            type: ThemePackUnitType.STYLE,
-          },
-          {
-            fileName: "app.noscript.css",
-            type: ThemePackUnitType.NOSCRIPT_STYLE,
-          },
-        ],
-      },
-    ],
+    themePacks = [CommonThemePack, SolarisedThemePack],
 
     logo = "Docs",
     feedback = null,
@@ -219,23 +188,23 @@ export async function compile (
 
             switch (article.type) {
             case MArticleType.ARTICLE_TYPE_REFERENCE:
-              article = article as MReferenceArticle;
-              let loadedSignatures = (article as MReferenceArticle).signatures
-                .map(s => new VReferenceArticleSignature({
-                  code: parseTypedCodeLine(s.definition),
-                }));
+              let loadedSignatures = await Promise.all((article as MReferenceArticle).signatures
+                .map(s => parseMarkdown(s.definition, true)
+                  .then(md => new VReferenceArticleSignature({
+                    code: {HTML: md.slice(5, -6)},
+                  }))));
 
               let loadedArguments = await Promise.all((article as MReferenceArticle).parameters
                 .map(p => parseMarkdown(p.definition, true, internalLinkCallback)
                   .then(md => new VReferenceArticleArgument({
                     name: p.name,
-                    description: md,
+                    description: {HTML: md},
                   }))));
 
               let loadedReturns = await Promise.all((article as MReferenceArticle).returns
                 .map(r => parseMarkdown(r.definition, true, internalLinkCallback)
                   .then(md => new VReferenceArticleReturn({
-                    value: md,
+                    value: {HTML: md},
                   }))));
 
               articleHtml = new VReferenceArticle({
@@ -326,7 +295,7 @@ export async function compile (
         minifyInlineCSS: true,
         minifyInlineJS: true,
       },
-      files: themePack.units.map(u => u.fileName),
+      files: themePack.units.map(u => u.fileName).filter(_ => _),
     });
   }
 

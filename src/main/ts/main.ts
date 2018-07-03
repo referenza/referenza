@@ -4,12 +4,28 @@ import cliCompile from "./CLI/compile";
 import cliServe from "./CLI/serve";
 import {compile} from "./Compilation/compile";
 import {serve} from "./Server/serve";
+import {CommonThemePack} from "./Compilation/Configuration/Default/Theme/CommonThemePack";
+import {SolarisedThemePack} from "./Compilation/Configuration/Default/Theme/SolarisedThemePack";
+import {ThemePackUnitType} from "./Compilation/Configuration/ThemePackUnit";
+import {FeedbackType} from "./Compilation/Configuration/FeedbackSettings";
 import commandLineUsage = require("command-line-usage");
 import commandLineArgs = require("command-line-args");
 
 export = {
   compile: compile,
   serve: serve,
+  resources: {
+    feedback: {
+      type: FeedbackType,
+    },
+    theme: {
+      default: {
+        common: CommonThemePack,
+        solarised: SolarisedThemePack,
+      },
+      unitType: ThemePackUnitType,
+    },
+  },
 };
 
 if (!module.parent) {

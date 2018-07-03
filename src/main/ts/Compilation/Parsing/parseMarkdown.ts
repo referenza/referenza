@@ -1,13 +1,13 @@
 import {cryptoRandomHex} from "../../Util/Random/cryptoRandomHex";
 import {parseCode} from "./parseCode";
 import marked from "marked";
-import {A} from "../HTML/A";
-import {INPUT} from "../HTML/INPUT";
-import {LABEL} from "../HTML/LABEL";
+import {HTMLAnchorElement} from "../HTML/HTMLAnchorElement";
+import {HTMLInputElement} from "../HTML/HTMLInputElement";
+import {HTMLLabelElement} from "../HTML/HTMLLabelElement";
 import {generateAsyncContentPlaceholder} from "./asyncContentPlaceholder";
-import {H} from "../HTML/H";
+import {HTMLHeadingElement} from "../HTML/HTMLHeadingElement";
 
-export function parseMarkdown (mdText: string, removeParagraphTags: boolean, internalLinkCallback: (hash: string) => string): Promise<string> {
+export function parseMarkdown (mdText: string, removeParagraphTags: boolean, internalLinkCallback?: (hash: string) => string): Promise<string> {
   return new Promise((resolve, reject) => {
     let renderer = new marked.Renderer();
 
@@ -70,16 +70,17 @@ export function parseMarkdown (mdText: string, removeParagraphTags: boolean, int
 
         let generated = (currentTabbedSectionsCount ? "</div></div>" : "") +
           `<div class="tabbed-section">` +
-          INPUT({
+          HTMLInputElement({
             ID: radioID,
             classes: ["tabbed-section-radio"],
             name: currentTabbedSectionsID,
             type: "radio",
-            checked: !!currentTabbedSectionsCount,
+            // Make the first section active
+            checked: !currentTabbedSectionsCount,
           }) +
           `<div class="tabbed-section-content">`;
 
-        currentTabbedSectionLabels!.push(LABEL({
+        currentTabbedSectionLabels!.push(HTMLLabelElement({
           classes: ["tabbed-section-label", currentTabbedSectionsCount ? "" : "active"],
           forID: radioID,
           content: content,
@@ -88,7 +89,7 @@ export function parseMarkdown (mdText: string, removeParagraphTags: boolean, int
         return generated;
 
       } else {
-        return H({
+        return HTMLHeadingElement({
           level: level + 1, // The only <h1> should be the article's title
           content: content,
         });
@@ -115,10 +116,13 @@ export function parseMarkdown (mdText: string, removeParagraphTags: boolean, int
         // Don't need to escape href, as it already is by renderer
         url = href;
       } else {
+        if (!internalLinkCallback) {
+          throw new Error(`INTERR No internal link callback provided`)
+        }
         url = internalLinkCallback(href.slice(1));
       }
 
-      return A({
+      return HTMLAnchorElement({
         // No need to escape content, as it already is by renderer
         content: {HTML: content},
         URL: url,
@@ -129,7 +133,8 @@ export function parseMarkdown (mdText: string, removeParagraphTags: boolean, int
     };
 
     let parsed = marked(mdText, {renderer})
-      .replace(/ </g, "<zc-space /><").replace(/> /g, "><zc-space />");
+      .replace(/ </g, "<zc-space /><")
+      .replace(/> /g, "><zc-space />");
 
     Promise.all(asyncContent.map(s => s[1]))
       .then(substitutions => {
