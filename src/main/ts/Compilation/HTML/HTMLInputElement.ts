@@ -1,13 +1,13 @@
 import {prepareTextOrHTML, TextOrHTML} from "../../Util/HTML/HTMLValue";
-import {generateCoreAttrs, TagConfig} from "./Tag";
+import {generateCoreAttrs, HTMLElementConfig} from "./HTMLElement";
 
-export interface InputConfig extends TagConfig {
+export interface HTMLInputElementConfig extends HTMLElementConfig {
   type?: "text" | "password" | "radio" | "checkbox" | "range" | "file";
   name?: TextOrHTML;
   checked?: boolean;
 }
 
-export function INPUT (
+export function HTMLInputElement (
   {
     ID,
     classes,
@@ -16,7 +16,7 @@ export function INPUT (
     type,
     name,
     checked,
-  }: InputConfig
+  }: HTMLInputElementConfig
 ): string {
   let coreAttrs = generateCoreAttrs({ID, classes, tooltip});
 

@@ -1,12 +1,12 @@
 import {prepareTextOrHTML, TextOrHTML} from "../../Util/HTML/HTMLValue";
-import {generateCoreAttrs, TagConfig} from "./Tag";
+import {generateCoreAttrs, HTMLElementConfig} from "./HTMLElement";
 
-export interface LabelConfig extends TagConfig {
+export interface HTMLLabelElementConfig extends HTMLElementConfig {
   content: TextOrHTML,
   forID?: TextOrHTML;
 }
 
-export function LABEL (
+export function HTMLLabelElement (
   {
     ID,
     classes,
@@ -14,7 +14,7 @@ export function LABEL (
 
     content,
     forID,
-  }: LabelConfig
+  }: HTMLLabelElementConfig
 ): string {
   let coreAttrs = generateCoreAttrs({ID, classes, tooltip});
 

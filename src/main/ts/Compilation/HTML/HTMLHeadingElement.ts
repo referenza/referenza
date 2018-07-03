@@ -1,12 +1,12 @@
 import {prepareTextOrHTML, TextOrHTML} from "../../Util/HTML/HTMLValue";
-import {generateCoreAttrs, TagConfig} from "./Tag";
+import {generateCoreAttrs, HTMLElementConfig} from "./HTMLElement";
 
-export interface HeadingConfig extends TagConfig {
+export interface HeadingConfig extends HTMLElementConfig {
   level: number;
   content: TextOrHTML,
 }
 
-export function H (
+export function HTMLHeadingElement (
   {
     ID,
     classes,

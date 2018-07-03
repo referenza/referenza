@@ -1,13 +1,13 @@
 import {prepareTextOrHTML, TextOrHTML} from "../../Util/HTML/HTMLValue";
-import {generateCoreAttrs, TagConfig} from "./Tag";
+import {generateCoreAttrs, HTMLElementConfig} from "./HTMLElement";
 
-export interface AnchorConfig extends TagConfig {
+export interface HTMLAnchorElementConfig extends HTMLElementConfig {
   content: TextOrHTML;
   URL: TextOrHTML;
   newTab: boolean;
 }
 
-export function A (
+export function HTMLAnchorElement (
   {
     ID,
     classes,
@@ -16,7 +16,7 @@ export function A (
     content,
     URL,
     newTab,
-  }: AnchorConfig
+  }: HTMLAnchorElementConfig
 ): string {
   let coreAttrs = generateCoreAttrs({ID, classes, tooltip});
 
