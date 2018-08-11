@@ -48,7 +48,7 @@
     "marked": "0.3.x",
     "mermaid": "^8.0.0-rc.8",
     "puppeteer": "^1.4.0",
-    "zcompile": "4.x"
+    "referenza-extension": "0.0.2"
   },
   "devDependencies": {
     "@types/chai": "^4.1.3",

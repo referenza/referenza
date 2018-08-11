@@ -1,8 +1,0 @@
-.header-project-menu-container::before {
-  background: #FDF6E3; /* Same as border-color */
-}
-
-.header-project-menu-container:target,
-.header-project-menu-container:target + .header-project-link {
-  border-color: #FDF6E3;
-}

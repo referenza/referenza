@@ -10,7 +10,7 @@ export interface CompilerSettings {
 
   statePath: string;
 
-  themePacks?: ReadonlyArray<ThemePack>;
+  extensions?: ReadonlyArray<IReferenzaExtension>;
 
   metadataFileName?: string;
 
