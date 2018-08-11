@@ -1,23 +1,19 @@
-import {ThemePack} from "./ThemePack";
 import {FeedbackSettings} from "./FeedbackSettings";
+import {IReferenzaExtension} from "referenza-extension";
 
 export interface CompilerSettings {
   clean?: boolean;
 
-  sourceDir: string;
-  intermediateDir?: string;
-  outputDir: string;
+  source: string;
+  intermediate?: string;
+  output: string;
 
-  statePath: string;
+  state: string;
 
   extensions?: ReadonlyArray<IReferenzaExtension>;
 
-  metadataFileName?: string;
-
   logo?: string;
   feedback?: FeedbackSettings;
-
-  projects: ReadonlyArray<string>;
 
   prefix?: string;
 }

@@ -4,8 +4,23 @@ import {
   FormFeedbackSettings,
   GitHubFeedbackSettings
 } from "../Compilation/Configuration/FeedbackSettings";
+import {Command} from "sacli";
 
-export = {
+interface CompileCommand {
+  source: string;
+  intermediate: string;
+  output: string;
+  state: string;
+  clean: boolean;
+  logo: string;
+  feedback: string;
+  GitHub: string;
+  prefix: string;
+}
+
+export default {
+  name: "compile",
+  description: "Compile Markdown files to generate static HTML documentation.",
   options: [
     {
       alias: "s",
@@ -42,13 +57,6 @@ export = {
       description: "Erase and ignore any existing state and compile everything from sources.",
     },
     {
-      alias: "m",
-      name: "metadata",
-      type: String,
-      typeLabel: "{underline filename}",
-      description: "[Default `__metadata__.js`] File name of metadata files."
-    },
-    {
       alias: "l",
       name: "logo",
       type: String,
@@ -76,24 +84,14 @@ export = {
       typeLabel: "{underline path}",
       description: "[Default `/`] URL path to prepend to every documentation URL."
     },
-    {
-      alias: "p",
-      name: "projects",
-      type: String,
-      multiple: true,
-      defaultOption: true,
-      typeLabel: "{underline name} ...",
-      description: "Names of the projects to compile.\nThis can be provided directly at the end without `-p/--projects`."
-    },
   ],
-  action: (args: any) => {
+  action: (args: CompileCommand) => {
     return compile({
       clean: args.clean,
-      sourceDir: args.source,
-      intermediateDir: args.intermediate,
-      outputDir: args.output,
-      statePath: args.state,
-      metadataFileName: args.metadata,
+      source: args.source,
+      intermediate: args.intermediate,
+      output: args.output,
+      state: args.state,
       logo: args.logo,
       feedback: args.feedback ? {
         type: FeedbackType.FORM,
@@ -103,13 +101,7 @@ export = {
         repoOwner: args.GitHub.split("/")[0],
         repoName: args.GitHub.split("/")[1],
       } as GitHubFeedbackSettings : undefined,
-      projects: args.projects,
       prefix: args.prefix,
     });
   },
-  help: [
-    {
-      header: "Options",
-    },
-  ],
-};
+} as Command;

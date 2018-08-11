@@ -1,6 +1,15 @@
 import {serve} from "../Server/serve";
+import {Command} from "sacli";
 
-export = {
+interface ServeCommand {
+  output: string;
+  port: number;
+  prefix: string;
+}
+
+export default {
+  name: "serve",
+  description: "Run an HTTP server locally that will serve generated documentation.",
   options: [
     {
       alias: "o",
@@ -24,16 +33,11 @@ export = {
       description: "[Default `/`] URL path prefix used when compiling."
     },
   ],
-  action: (args: any) => {
+  action: (args: ServeCommand) => {
     serve({
       outputDir: args.output,
       port: args.port,
       prefix: args.prefix,
     });
   },
-  help: [
-    {
-      header: "Options",
-    },
-  ],
-};
+} as Command;
