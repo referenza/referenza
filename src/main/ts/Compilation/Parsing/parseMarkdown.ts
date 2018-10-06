@@ -1,11 +1,7 @@
 import {cryptoRandomHex} from "../../Util/Random/cryptoRandomHex";
 import {parseCode} from "./parseCode";
 import marked from "marked";
-import {HTMLAnchorElement} from "../HTML/HTMLAnchorElement";
-import {HTMLInputElement} from "../HTML/HTMLInputElement";
-import {HTMLLabelElement} from "../HTML/HTMLLabelElement";
 import {generateAsyncContentPlaceholder} from "./asyncContentPlaceholder";
-import {HTMLHeadingElement} from "../HTML/HTMLHeadingElement";
 
 export function parseMarkdown (mdText: string, removeParagraphTags: boolean, internalLinkCallback?: (hash: string) => string): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -132,9 +128,7 @@ export function parseMarkdown (mdText: string, removeParagraphTags: boolean, int
       });
     };
 
-    let parsed = marked(mdText, {renderer})
-      .replace(/ </g, "<zc-space /><")
-      .replace(/> /g, "><zc-space />");
+    let parsed = marked(mdText, {renderer});
 
     Promise.all(asyncContent.map(s => s[1]))
       .then(substitutions => {

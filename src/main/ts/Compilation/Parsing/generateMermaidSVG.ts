@@ -1,5 +1,4 @@
-import puppeteer, {Browser} from "puppeteer";
-import {Page} from "puppeteer";
+import puppeteer, {Browser, Page} from "puppeteer";
 
 export function generateMermaidSVG (code: string): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -17,23 +16,16 @@ export function generateMermaidSVG (code: string): Promise<string> {
         page = p;
         return page.goto(`file://${__dirname}/../../../resources/generateMermaidSVG/index.html`);
       })
-      .then(() => {
-        return page.$eval("#container", (container, code) => {
+      .then(() =>
+        page.$eval("#container", (container, code) => {
           container.textContent = code;
           window.mermaid.initialize({});
 
           window.mermaid.init(undefined, container);
-        }, code);
-      })
-      .then(() => {
-        return page.$eval("#container", container => container.innerHTML);
-      })
-      .then(svg => {
-        resolve(svg);
-      })
+        }, code))
+      .then(() => page.$eval("#container", container => container.innerHTML))
+      .then(svg => resolve(svg))
       .catch(reject)
-      .then(() => {
-        return browser.close();
-      });
+      .then(() => browser.close());
   });
 }
