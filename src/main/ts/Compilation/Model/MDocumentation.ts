@@ -2,6 +2,7 @@ import {MArticle} from "./Article/MArticle";
 import {OrderedMap} from "../../Util/Structure/OrderedMap";
 import {createURLPathComponent} from "../../Util/URL/createURLPathComponent";
 
+// TODO Delete
 export class MDocumentation {
   name: string;
   version: string;
