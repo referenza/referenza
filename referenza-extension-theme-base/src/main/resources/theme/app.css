@@ -1,0 +1,89 @@
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  /* For unsupported browsers */
+  display: none;
+}
+
+body, button, select, input, textarea {
+  border-radius: 0;
+  outline: none;
+  margin: 0;
+}
+
+button {
+  background: transparent;
+  border: 0;
+  font-size: 1rem;
+  padding: 0;
+
+  cursor: pointer;
+}
+
+button:hover, button:focus {
+  text-decoration: underline;
+}
+
+textarea {
+  resize: none;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+}
+
+a:hover, a:focus {
+  text-decoration: underline;
+}
+
+::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#main {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+#pane, #article-container {
+  display: table-cell;
+  vertical-align: top;
+}
+
+<ZC-IMPORT[feedback/base.css]>
+<ZC-IMPORT[article/base.css]>
+<ZC-IMPORT[header/base.css]>
+<ZC-IMPORT[pane/base.css]>
+
+@media screen and (min-width: 1001px) {
+  <ZC-IMPORT[feedback/large.css]>
+  <ZC-IMPORT[article/large.css]>
+  <ZC-IMPORT[header/large.css]>
+  <ZC-IMPORT[pane/large.css]>
+}
+
+@media screen and (max-width: 1000px) {
+  <ZC-IMPORT[feedback/small.css]>
+  <ZC-IMPORT[article/small.css]>
+  <ZC-IMPORT[header/small.css]>
+  <ZC-IMPORT[pane/small.css]>
+}
+
+@media print {
+  <ZC-IMPORT[feedback/print.css]>
+  <ZC-IMPORT[article/print.css]>
+  <ZC-IMPORT[header/print.css]>
+  <ZC-IMPORT[pane/print.css]>
+}

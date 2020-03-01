@@ -1,0 +1,82 @@
+#header {
+  display: table;
+  width: 100%;
+
+  height: 5rem; /* Fixed height so that menu popup is accurate */
+}
+
+#header > * {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#header-logo {
+  font-weight: 600;
+  width: 1px;
+}
+
+#header-project {
+  white-space: nowrap;
+
+  overflow: auto;
+}
+
+.header-project-link {
+  display: inline-block;
+  vertical-align: middle;
+  font-weight: 600;
+}
+
+.header-project-link::after {
+  content: '▼';
+  margin-left: 0.25rem;
+}
+
+.header-project-menu-container {
+  position: fixed;
+
+  /* Needed to keep above .tabbed-sections in FF */
+  z-index: 1;
+
+  display: none;
+
+  white-space: normal; /* Undo ancestor styling */
+}
+
+.header-project-menu-container:target {
+  display: block;
+}
+
+.header-project-menu-heading,
+.header-project-menu-entry-link,
+.header-project-menu:empty::before {
+  display: block;
+  padding: 0 1rem;
+}
+
+.header-project-menu-close-link {
+  display: block;
+}
+
+.header-project-menu-title {
+  font-weight: 600;
+}
+
+.header-project-menu {
+  padding: 0;
+  margin: 0;
+}
+
+.header-project-menu:empty::before {
+  content: "Nothing to see here...";
+}
+
+.header-project-menu-entry {
+  display: block;
+  font-weight: 600;
+}
+
+#header-controls {
+  text-align: right;
+  width: 1px;
+}

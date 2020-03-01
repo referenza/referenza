@@ -1,0 +1,79 @@
+#header-logo {
+  padding: 0 1.25rem;
+  font-size: 2.25rem;
+}
+
+.header-project-menu-container,
+.header-project-link {
+  border: 0.125rem solid transparent; /* For large :target + .link; also see menu-container::before height */
+}
+
+.header-project-link {
+  height: 2.5rem; /* Fixed height so that menu popup is accurately positioned */
+  line-height: 2.25rem; /* height - (2 * border) */
+  padding: 0 0.75rem;
+}
+
+#header-project-link-projects {
+  width: 9rem;
+}
+
+#header-project-link-versions {
+  width: 4.5rem;
+}
+
+.header-project-menu-container {
+  top: 3.75rem; /* (#header height / 2) + (.link height / 2) */
+  width: 13.5rem; /* Same as both links combined */
+  z-index: 1; /* Needed to overlap #pane */
+}
+
+.header-project-menu-container::before {
+  content: '';
+  display: block;
+  height: 0.125rem; /* Same as border-height */
+}
+
+.header-project-menu-container:first-of-type::before {
+  width: 4.5rem;
+  float: right;
+}
+
+.header-project-menu-container:last-of-type::before {
+  width: 9rem;
+  float: left;
+}
+
+.header-project-menu-container:target {
+  border-top: 0;
+}
+
+.header-project-menu-container:target + .header-project-link {
+  border-bottom: 0;
+}
+
+.header-project-menu-heading,
+.header-project-menu-entry-link,
+.header-project-menu:empty::before {
+  margin: 1rem 0;
+}
+
+.header-project-menu-close-link {
+  font-size: 0.75rem;
+}
+
+.header-project-menu-title {
+  font-size: 1.5rem;
+}
+
+.header-project-menu {
+  font-size: 0.9rem;
+}
+
+.header-project-menu-title {
+  display: none;
+}
+
+#header-controls {
+  padding: 0 2rem;
+}

@@ -1,0 +1,21 @@
+#pane {
+  display: none;
+}
+
+#pane:target {
+  display: block;
+}
+
+#pane:target + #article-container {
+  /*
+
+    Need to hide #article because:
+
+    1) If #pane is transparent, lower background will leak through
+    2) #article will likely cause page to overflow if content is long enough,
+        which means scrolling down will push the app header up (as the <body>
+        is scrolled behind the #pane)
+
+  */
+  display: none;
+}

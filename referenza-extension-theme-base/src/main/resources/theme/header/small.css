@@ -1,0 +1,36 @@
+#header-logo {
+  padding: 0 1rem;
+  font-size: 2rem;
+}
+
+.header-project-link {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.95rem;
+}
+
+.header-project-menu-container {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+}
+
+.header-project-menu-heading,
+.header-project-menu-entry-link,
+.header-project-menu:empty::before {
+  margin: 1.25rem 0;
+}
+
+.header-project-menu-title {
+  font-size: 2rem;
+}
+
+.header-project-menu {
+  font-size: 1.125rem;
+}
+
+#header-controls {
+  font-size: 0.875rem;
+  padding: 0 1rem;
+}

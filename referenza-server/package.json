@@ -1,0 +1,49 @@
+{
+  "name": "referenza-server",
+  "version": "0.0.1",
+  "description": "Development server for referenza",
+  "main": "dist/main.js",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "test": "mocha -r ts-node/register src/test/**/*.spec.ts",
+    "prepublishOnly": "npm run test && npm run build",
+    "clean": "rm -rf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/referenza/referenza-server.git"
+  },
+  "keywords": [
+    "referenza",
+    "dev",
+    "serve"
+  ],
+  "author": {
+    "email": "contact@wilsonl.in",
+    "name": "Wilson Lin",
+    "url": "https://wilsonl.in/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/referenza/referenza-server/issues"
+  },
+  "homepage": "https://github.com/referenza/referenza-server#readme",
+  "dependencies": {
+    "compression": "^1.7.3",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.3",
+    "@types/compression": "0.0.36",
+    "@types/express": "^4.16.0",
+    "@types/mocha": "^5.2.1",
+    "@types/node": "^10.5.2",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "ts-node": "^6.1.0",
+    "typescript": "^2.9.1"
+  }
+}

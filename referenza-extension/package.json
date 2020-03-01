@@ -1,0 +1,35 @@
+{
+  "name": "referenza-extension",
+  "version": "0.0.2",
+  "description": "Base module for implementing referenza extensions",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/referenza/referenza-extension.git"
+  },
+  "main": "dist/main.js",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "prepublishOnly": "npm run build",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "referenza",
+    "extension",
+    "extensions",
+    "theme",
+    "themes"
+  ],
+  "author": {
+    "email": "contact@wilsonl.in",
+    "name": "Wilson Lin",
+    "url": "https://wilsonl.in/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/referenza/referenza-extension/issues"
+  },
+  "homepage": "https://github.com/referenza/referenza-extension#readme"
+}

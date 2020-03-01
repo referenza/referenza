@@ -1,0 +1,262 @@
+#article section:not(:last-of-type) {
+  margin-bottom: 4rem;
+}
+
+#article header {
+  padding: 1.5rem 1.25rem;
+}
+
+#article .category {
+  display: none;
+
+  margin-bottom: 0.5rem;
+
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+#article .category-label {
+  /* For reader mode */
+  font-size: 0;
+}
+
+#article h1, h2, h3 {
+  font-weight: 600;
+  margin: 0;
+}
+
+#article h2, h3 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+#article > section > :not(h2):not(h3) {
+  margin-left: 1.25rem !important;
+  margin-right: 1.25rem !important;
+}
+
+#article h1 {
+  font-size: 2.25rem;
+
+  /* Don't reduce too much, as otherwise multiple lines get cramped */
+  line-height: 1.25;
+}
+
+#article h2 {
+  font-size: 1.25rem;
+
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+}
+
+#article h3 {
+  font-size: 1rem;
+
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+#article .table-container {
+  overflow: auto;
+}
+
+#article table {
+  border-collapse: collapse;
+  min-width: 100%;
+}
+
+#article td, #article th {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid transparent;
+}
+
+#article th {
+  text-align: left;
+}
+
+#article td td, #article td th {
+  padding: 0.25rem 0.75rem;
+}
+
+#article td thead th {
+  font-size: 0.875rem;
+}
+
+#article ul, /* List */
+#article ol  /* List */
+{
+  padding-left: 1.5rem;
+}
+
+#article p, /* Paragraph */
+#article pre, /* Block of code */
+#article dl, /* Definition list */
+#article ul, /* List (ordered) */
+#article ol, /* List (unordered) */
+#article .table-container, /* Table */
+#article .tabbed-sections /* Tabbed sections */
+{
+  margin: 1.25rem 0; /* Left and right are 1.25rem, so match */
+}
+
+#article dt, /* Definition title */
+#article dd, /* Definition value */
+#article dd dl, /* Definition list inside definition list */
+#article li, /* List item */
+#article li ul, /* List inside list */
+#article li ol /* List inside list */
+{
+  margin: 0.5rem 0;
+}
+
+#article td ul, /* List inside table */
+#article td ol /* List inside table */
+{
+  margin: 0;
+}
+
+#article dt /* Definition title */
+{
+  font-weight: 600;
+}
+
+#article pre, /* Block of code */
+#article code /* Inline code */
+{
+  font-size: 0.8125rem;
+}
+
+#article pre /* Block of code */
+{
+  display: block;
+  overflow: auto;
+
+  padding: 0.75rem;
+}
+
+#article pre.signature {
+  border: 1px solid transparent;
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+
+#article code /* Inline code */
+{
+  padding: 0.1875rem 0.4375rem;
+}
+
+#article a code /* Inline code in link */
+{
+  color: inherit;
+}
+
+.article-nav {
+  display: table;
+  width: 100%;
+
+  font-weight: 600;
+
+  padding: 0 1.25rem;
+  font-size: 0.875rem;
+  margin: 1.5rem 0;
+}
+
+.article-nav > div {
+  display: table-cell;
+}
+
+.article-nav-right {
+  text-align: right;
+}
+
+.tabbed-sections {
+  position: relative;
+  border: 1px solid transparent;
+}
+
+.tabbed-sections::before {
+  content: "";
+  display: block;
+  height: 2.75rem;
+}
+
+.tabbed-sections-labels {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 2.75rem;
+  line-height: 2.75rem;
+
+  border-bottom: 1px solid transparent;
+
+  white-space: nowrap;
+  overflow-x: auto;
+
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.tabbed-sections-labels > li {
+  display: inline-block;
+
+  height: 100%;
+  vertical-align: top;
+
+  margin: 0 !important;
+}
+
+.tabbed-section-label {
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  display: block;
+  padding: 0 1.25rem;
+
+  border-bottom: 0.125rem solid transparent;
+}
+
+.tabbed-section-label.active {
+  text-decoration: underline;
+}
+
+.tabbed-section-label:hover {
+  text-decoration: underline;
+}
+
+.tabbed-section {
+}
+
+.tabbed-section-radio {
+  display: none;
+}
+
+.tabbed-section-content {
+}
+
+.tabbed-section-content > :not(pre) {
+  font-size: 0.875rem;
+  margin-left: 0.75rem !important;
+  margin-right: 0.75rem !important;
+}
+
+.tabbed-section-content > * {
+  margin-top: 0.75rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.tabbed-section-content > pre:first-child {
+  margin-top: 0 !important;
+}
+
+.tabbed-section-content > pre:last-child {
+  margin-bottom: 0 !important;
+}
+
+#article .tabbed-section-radio:not(:checked) + .tabbed-section-content {
+  display: none;
+}
