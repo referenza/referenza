@@ -6,7 +6,7 @@ import * as rmd from 'rmd-parse';
 
 type ParsedUnitBase = {
   description: string;
-  parent: ParsedDir | undefined;
+  parent?: ParsedDir;
   title: string;
   urlPath: string[];
 };
@@ -14,6 +14,8 @@ type ParsedUnitBase = {
 export type ParsedPage = ParsedUnitBase & {
   // Rendered HTML.
   content: string;
+  prev?: ParsedPage;
+  next?: ParsedPage;
 };
 
 export type ParsedDir = ParsedUnitBase & {
@@ -27,6 +29,21 @@ export const isParsedDir = (unit: ParsedUnit): unit is ParsedDir => 'pages' in u
 const renderMarkdown = async (absPath: string) => {
   const parsed = rmd.parse(absPath, await fs.readFile(absPath, 'utf8'));
   return await new HTMLRenderer().processDocumentAsync(parsed);
+};
+
+export const linkPages = (prev: ParsedPage | undefined, dir: ParsedUnit[]): ParsedPage | undefined => {
+  for (const unit of dir) {
+    if (isParsedDir(unit)) {
+      prev = linkPages(prev, unit.pages);
+    } else {
+      if (prev) {
+        prev.next = unit;
+      }
+      unit.prev = prev;
+      prev = unit;
+    }
+  }
+  return prev;
 };
 
 export const parseDir = async ({

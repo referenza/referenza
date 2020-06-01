@@ -15,10 +15,10 @@ export const Footer = ({
 }) => (
   <footer className="Footer">
     {prev && (
-      <a href={prev.href} title="Previous article">{prev.name}   &gt;</a>
+      <a href={prev.href} title="Previous article">&lt;   {prev.name}</a>
     )}
     {next && (
-      <a href={next.href} title="Next article">&lt;   {next.name}</a>
+      <a href={next.href} title="Next article">{next.name}   &gt;</a>
     )}
   </footer>
 );
