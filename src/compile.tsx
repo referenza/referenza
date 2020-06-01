@@ -4,9 +4,8 @@ import {dirname, join} from 'path';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import {isParsedDir, parseDir, ParsedPage, ParsedUnit} from './parse';
-import {Page} from './view/Page/Page';
-import {PaneTocCategory} from './view/Pane/PaneTocCategory';
-import {PaneTocCategoryEntry} from './view/Pane/PaneTocCategoryEntry';
+import {Article} from './view/Article';
+import {Toc, TocCategory, TocEntry} from './view/Toc';
 
 const encodePathComponent = (component: string): string => {
   // Allowed: $ .
@@ -31,23 +30,25 @@ const renderPage = ({
   prefix: string;
 }) => {
   const TocEntries = page.parent!.parent!.pages.map(gp => isParsedDir(gp) ? (
-    <PaneTocCategory
+    <TocCategory
       name={gp.title}
       Entries={gp.pages.map(p => (
-        <PaneTocCategoryEntry description={p.description} isActive={p === page} name={p.title} url={encodedPrefixedPath(prefix, ...p.urlPath)}/>
+        <TocEntry description={p.description} isActive={p === page} name={p.title} url={encodedPrefixedPath(prefix, ...p.urlPath)}/>
       ))}
       isActive={false}
     />
   ) : (
-    <PaneTocCategoryEntry description={gp.description} isActive={false} name={gp.title} url={encodedPrefixedPath(prefix, ...gp.urlPath)}/>
+    <TocEntry description={gp.description} isActive={false} name={gp.title} url={encodedPrefixedPath(prefix, ...gp.urlPath)}/>
   ));
 
   return (
-    <Page
-      Article={(
+    <Article
+      Content={(
         <div dangerouslySetInnerHTML={{__html: page.content}}/>
       )}
-      TocEntries={TocEntries}
+      Toc={(
+        <Toc Entries={TocEntries}/>
+      )}
     />
   );
 };
