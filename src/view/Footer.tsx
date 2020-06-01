@@ -13,7 +13,7 @@ export const Footer = ({
     name: string;
   };
 }) => (
-  <footer>
+  <footer className="Footer">
     {prev && (
       <a href={prev.href} title="Previous article">{prev.name}   &gt;</a>
     )}

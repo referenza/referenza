@@ -1,3 +1,4 @@
+import {cls} from 'extlib/js/dom/classname';
 import React from 'react';
 
 export const TocEntry = ({
@@ -11,26 +12,23 @@ export const TocEntry = ({
   name: string;
   url: string;
 }) => (
-  <li className={`toc-category-entry ${isActive ? 'active' : ''}`} title={description}>
-    <a href={isActive ? '#' : url}>{name}</a>
-  </li>
+  <a
+    className={cls('Entry', isActive && 'EntryActive')}
+    title={description}
+    href={isActive ? '#' : url}
+  >{name}</a>
 );
 
 export const TocCategory = ({
-  isActive,
   Entries,
   name,
 }: {
-  isActive: boolean;
   Entries: JSX.Element[];
   name: string;
 }) => (
-  <label className="toc-category">
-    <input type="radio" hidden name="toc-category-expanded" checked={isActive}/>
-    <div className={`toc-category-name-wrapper ${isActive ? 'active' : ''}`}>
-      <div className="toc-category-name">{name}</div>
-    </div>
-    <ul className="toc-category-entries">{Entries}</ul>
+  <label className="Category">
+    <div className="CategoryName">{name}</div>
+    <div className="CategoryEntries">{Entries}</div>
   </label>
 );
 
@@ -39,11 +37,9 @@ export const Toc = ({
 }: {
   Entries: JSX.Element[];
 }) => (
-  <div className="referenza-toc-container">
-    <label id="toc-search-wrapper">
-      <input id="toc-search" placeholder="Search for an article" title="Search for an article"/>
-    </label>
-    <div id="toc-categories">
+  <div className={cls('Toc', 'NoSelect')}>
+    <input className="Search" placeholder="Search for an article" title="Search for an article"/>
+    <div className="Entries">
       {Entries}
     </div>
   </div>

@@ -7,8 +7,8 @@ export const Header = ({
   category: string;
   name: string;
 }) => (
-  <header>
-    <a href="#referenza-toc" className="category"><span className="category-label">In category: </span>{category}</a>
-    <h1>${name}</h1>
+  <header className="Header">
+    <button className="OpenToc"><span className="Category">In category: </span>{category}</button>
+    <h1 className="Title">${name}</h1>
   </header>
 );

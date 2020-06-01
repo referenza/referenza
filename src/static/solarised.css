@@ -1,0 +1,12 @@
+:root {
+  --ReferenzaBackgroundColor: #002b36;
+  --ReferenzaColor: #839496;
+  --ReferenzaFontFamily: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Cantarell, Oxygen, Droid Sans, Fira Sans, Open Sans, Arial, sans-serif;
+  --ReferenzaFontSize: 16px;
+  --ReferenzaLineHeight: 1.5;
+  --ReferenzaLinkColor: #2aa198;
+  --ReferenzaTocBackgroundColor: #101e26;
+  --ReferenzaTocCategoryColor: gray;
+  --ReferenzaTocEntryActiveBorderColor: #2aa198;
+  --ReferenzaTocSearchBackgroundColor: #073642;
+}

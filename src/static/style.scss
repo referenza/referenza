@@ -1,0 +1,72 @@
+.Referenza {
+  background: var(--ReferenzaBackgroundColor);
+  color: var(--ReferenzaColor);
+  font-family: var(--ReferenzaFontFamily);
+  font-size: var(--ReferenzaFontSize);
+  line-height: var(--ReferenzaLineHeight);
+
+  display: flex;
+  align-items: flex-start;
+
+  a {
+    color: var(--ReferenzaLinkColor);
+    outline: 0;
+  }
+
+  .NoSelect {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .Toc {
+    background: var(--ReferenzaTocBackgroundColor);
+    flex: 0 0 auto;
+    width: 16em;
+
+    .Search {
+      background: var(--ReferenzaTocSearchBackgroundColor);
+      border: var(--ReferenzaTocSearchBorderWidth) solid var(--ReferenzaTocSearchBorderColor);
+      border-radius: var(--ReferenzaTocSearchBorderRadius);
+      display: block;
+      font-family: inherit;
+      font-size: 0.875em;
+      width: 100%;
+      padding: 0.75em 1em;
+    }
+
+    .Search:focus {
+      border-color: var(--ReferenzaTocSearchFocusedBorderColor);
+    }
+
+    .CategoryName {
+      color: var(----ReferenzaTocCategoryColor);
+      font-size: 0.75em;
+      text-transform: uppercase;
+      padding: 0.75em;
+    }
+
+    .Entry {
+      border-left: 0.25em solid transparent;
+      color: inherit;
+      display: block;
+      font-size: 0.875em;
+      padding: 0.5em 1em 0.5em 1.5em;
+      text-decoration: none;
+    }
+
+    .Entry:hover {
+      text-decoration: underline;
+    }
+
+    .EntryActive {
+      border-color: var(--ReferenzaTocEntryActiveBorderColor);
+      font-weight: bold;
+    }
+  }
+
+  .ArticleContent {
+    flex-grow: 1;
+  }
+}
