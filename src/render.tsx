@@ -22,10 +22,10 @@ export const renderPage = ({
   // We should at the very least be able to get the parent as a file must always be inside a directory.
   const TocEntries = assertExists([page.parent?.parent, page.parent].find(exists)).pages.map(gp => isParsedDir(gp) ? (
     <TocCategory
-      name={gp.title}
       Entries={gp.pages.map(p => (
         <TocEntry description={p.description} isActive={p === page} name={p.title} url={encodedPrefixedPath(prefix, ...p.urlPath)}/>
       ))}
+      name={gp.title}
     />
   ) : (
     <TocEntry description={gp.description} isActive={gp === page} name={gp.title} url={encodedPrefixedPath(prefix, ...gp.urlPath)}/>
@@ -35,9 +35,6 @@ export const renderPage = ({
     <Article
       Content={(
         <div dangerouslySetInnerHTML={{__html: page.content}}/>
-      )}
-      Header={(
-        <Header category={assertExists(page.parent).title} name={page.title}/>
       )}
       Footer={(
         <Footer
@@ -50,6 +47,9 @@ export const renderPage = ({
             name: p.title,
           }))}
         />
+      )}
+      Header={(
+        <Header category={assertExists(page.parent).title} name={page.title}/>
       )}
       scriptUrl={scriptUrl}
       styleUrl={styleUrl}
